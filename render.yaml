@@ -1,0 +1,83 @@
+# Render Blueprint (Infrastructure as Code) para o FutCaixa.
+#
+# Publica a aplicação Next.js (front + back no mesmo serviço) como um Web
+# Service Node e agenda os dois crons (mensalidades e recorrentes) como Cron
+# Jobs separados que chamam as rotas /api/cron/* protegidas por CRON_SECRET.
+#
+# Como usar:
+#   1. No Render: New > Blueprint > conecte o repo github.com/edipo-dados/futcaixa.
+#   2. O Render lê este arquivo e cria o Web Service + os 2 Cron Jobs.
+#   3. Preencha as env vars marcadas com `sync: false` (valores secretos) no
+#      painel: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY,
+#      SUPABASE_SERVICE_ROLE_KEY, CRON_SECRET.
+#   4. Após o primeiro deploy, copie a URL pública do web service
+#      (https://<nome>.onrender.com) e cole em APP_URL (nos 2 cron jobs) — ela
+#      é usada pelo curl para bater nas rotas de cron.
+#
+# Observação (Free): o web service "dorme" após 15 min sem tráfego; o primeiro
+# acesso após ocioso sofre cold start (~1 min). Os cron jobs acordam o serviço
+# ao chamá-lo. Para eliminar o sleep, troque `plan: free` por um plano pago.
+
+services:
+  # ── Aplicação Next.js (SSR + Server Actions + API) ──────────────────────
+  - type: web
+    name: futcaixa
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /login
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      # Segredos: preencher no painel do Render (não versionar valores).
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+
+  # ── Cron: gerar mensalidades (diário, 06:00 UTC = 03:00 BRT) ─────────────
+  - type: cron
+    name: futcaixa-cron-mensalidades
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    schedule: "0 6 * * *"
+    buildCommand: ""
+    # Chama a rota protegida com o CRON_SECRET no header. --fail faz o job
+    # terminar com erro se a rota responder >= 400 (visível no painel).
+    startCommand: >-
+      curl --fail --show-error --silent
+      -H "Authorization: Bearer $CRON_SECRET"
+      "$APP_URL/api/cron/gerar-mensalidades"
+    envVars:
+      - key: APP_URL
+        sync: false
+      - key: CRON_SECRET
+        sync: false
+
+  # ── Cron: gerar recorrentes (diário, 06:00 UTC = 03:00 BRT) ──────────────
+  - type: cron
+    name: futcaixa-cron-recorrentes
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    schedule: "0 6 * * *"
+    buildCommand: ""
+    startCommand: >-
+      curl --fail --show-error --silent
+      -H "Authorization: Bearer $CRON_SECRET"
+      "$APP_URL/api/cron/gerar-recorrentes"
+    envVars:
+      - key: APP_URL
+        sync: false
+      - key: CRON_SECRET
+        sync: false
