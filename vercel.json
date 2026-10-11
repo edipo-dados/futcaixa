@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/gerar-recorrentes",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/gerar-mensalidades",
+      "schedule": "0 6 * * *"
+    }
+  ]
+}

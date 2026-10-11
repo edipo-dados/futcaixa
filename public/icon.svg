@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="FutCaixa">
+  <!-- Fundo em sangria total (verde do tema) para suportar ícone maskable:
+       o conteúdo relevante fica dentro da zona segura (~80% central). -->
+  <rect width="512" height="512" fill="#16a34a" />
+
+  <!-- Zona segura: bola branca centralizada ocupando ~70% do canvas. -->
+  <g>
+    <circle cx="256" cy="256" r="150" fill="#ffffff" />
+    <!-- Pentágono central e costuras estilizadas da bola de futebol. -->
+    <g fill="#16a34a">
+      <polygon points="256,196 300,228 283,280 229,280 212,228" />
+      <!-- Pentágonos periféricos (parciais) sugerindo a bola. -->
+      <polygon points="256,150 236,168 256,186 276,168" />
+      <polygon points="366,236 345,230 338,252 356,264" />
+      <polygon points="174,264 192,252 185,230 164,236" />
+      <polygon points="206,344 222,330 204,312 186,322" />
+      <polygon points="306,344 326,322 308,312 290,330" />
+    </g>
+    <!-- Símbolo de cents (₵) marcando o "Caixa", em verde sobre o pentágono. -->
+    <text x="256" y="268" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700" text-anchor="middle" dominant-baseline="middle">₵</text>
+  </g>
+</svg>

@@ -1,0 +1,1413 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Inicializar Next.js (App Router) + TypeScript, Tailwind e shadcn/ui; configurar ESLint/Prettier e Vitest": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674065
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292686224
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791293428993
+      }
+    ],
+    "1.2 Configurar clientes Supabase (server e client), variáveis de ambiente e helper de sessão": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674104
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791293436413
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791293840485
+      }
+    ],
+    "1.3 Implementar utilitários de dinheiro (centavos ↔ BRL) e data (America/Sao_Paulo) com testes unitários": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674123
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791293846575
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294068744
+      }
+    ],
+    "2.1 Migration do schema base: profiles, players, categories, settings": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674147
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294072514
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294277301
+      }
+    ],
+    "2.2 Migration de transações e recorrências: transactions, recurring_expenses": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674170
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294280504
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294438433
+      }
+    ],
+    "2.3 Migration de cobranças e comprovantes: charges, payment_proofs": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674189
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294441668
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294662335
+      }
+    ],
+    "2.4 Migration de metas e auditoria: goals, audit_log + triggers de auditoria": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674210
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294665517
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294919149
+      }
+    ],
+    "2.5 Migration das views agregadas: v_monthly_summary, v_category_breakdown, v_balance_history, v_delinquency_rate": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674231
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294923782
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791295096500
+      }
+    ],
+    "2.6 Habilitar RLS e criar políticas por papel em todas as tabelas + função `current_role()`": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674256
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791295100023
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791295450462
+      }
+    ],
+    "2.7 Configurar bucket privado `proofs` e policies de Storage (dono ou gestor) + helper de URL assinada": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674279
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791295577112
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791296062533
+      }
+    ],
+    "3.1 Tela de login com magic link / OTP, restrita a e-mails cadastrados": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674297
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791296066537
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791297788309
+      }
+    ],
+    "3.2 Middleware de proteção de rotas e guarda por papel": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674317
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791297791621
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791298161891
+      }
+    ],
+    "3.3 Carregamento de perfil/papel pós-login e contexto de sessão": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674334
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791298168478
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791298406911
+      }
+    ],
+    "4.1 Schema Zod + tela de Configurações (dados do clube, Pix, valores padrão, dias, saldo inicial, logo)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674353
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791298431743
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791302984239
+      }
+    ],
+    "4.2 Validação de pré-requisitos de Pix (bloquear uso sem chave/recebedor/cidade)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674373
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791302989245
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791303286144
+      }
+    ],
+    "5.1 CRUD de jogadores com Zod (campos, tipo, status, nível, isento+motivo, valores personalizados)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674396
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791303290079
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791303679852
+      }
+    ],
+    "5.2 Inativação preservando histórico e exclusão da geração automática": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674418
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791303683577
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791304222122
+      }
+    ],
+    "6.1 Gestão de categorias editáveis (criar, renomear, reordenar e ativar/desativar; incluindo as padrão)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674439
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791304227117
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791308195178
+      }
+    ],
+    "6.2 CRUD de lançamentos com comprovante (upload para bucket privado), soft delete e auditoria": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674462
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791308199229
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791310469696
+      }
+    ],
+    "6.3 Lançamento rápido de despesa do dia do jogo (data, categoria ex.: Goleiro, descrição livre, jogador opcional)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674494
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791310474103
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791310895537
+      }
+    ],
+    "7.1 CRUD de despesas recorrentes (valor, categoria, dia, ativa/inativa)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674513
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791310901768
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791311856996
+      }
+    ],
+    "7.2 Route Handler de cron `gerar-recorrentes` protegido por CRON_SECRET, idempotente": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674536
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791311861236
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791312098615
+      }
+    ],
+    "8.1 Cobranças avulsas manuais (mensalidade/avulso/multa/vaquinha) com vencimento": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674556
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791312109780
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791312686073
+      }
+    ],
+    "8.2 Route Handler de cron `gerar-mensalidades` para mensalistas ativos não isentos, idempotente": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674579
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791312690147
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791313043590
+      }
+    ],
+    "8.3 Transição de status e geração automática de receita ao marcar como paga; cancelamento auditado": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674597
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791313049006
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791313612593
+      }
+    ],
+    "9.1 Implementar CRC16-CCITT com testes unitários (payloads de referência)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674617
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791313618436
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791313815011
+      }
+    ],
+    "9.2 Montagem do BR Code / EMV (TLV, normalização de nome/cidade, txid) com testes": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674637
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791313819244
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791314089977
+      }
+    ],
+    "9.3 Interface `PaymentProvider` + `StaticPixProvider`": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674656
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791314094222
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791314252735
+      }
+    ],
+    "9.4 Tela de pagamento: QR Code + botão \"Pix copia e cola\"": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674696
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791314256920
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791314496325
+      }
+    ],
+    "9.5 Upload de comprovante (imagem/PDF) → status `em_analise`; validação de tipo/tamanho": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674714
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791314500328
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791315105401
+      }
+    ],
+    "9.6 Aprovação/rejeição por admin/tesoureiro (paga + receita; ou volta a pendente) com auditoria": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674735
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791315109682
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791315536844
+      }
+    ],
+    "10.1 Lista de atrasados (nome, total devido, meses em atraso) a partir de cobranças pendentes vencidas": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674755
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791315543255
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791315911736
+      }
+    ],
+    "10.2 Geração de mensagem WhatsApp: \"Copiar mensagem\" e \"Compartilhar\" via `wa.me`, com opção de ocultar valores": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674772
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791315919540
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791316245715
+      }
+    ],
+    "11.1 Cards (saldo atual, receitas/despesas do mês, % adimplência) a partir das views": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674789
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791316251076
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791316450115
+      }
+    ],
+    "11.2 Gráficos Recharts: receitas vs despesas (12m), despesas por categoria (mês/ano), evolução do saldo": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674813
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791316454467
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791316882381
+      }
+    ],
+    "11.3 Runway (média de despesas dos últimos 3 meses) com tratamento de divisão por zero": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674836
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791316886651
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791317123813
+      }
+    ],
+    "11.4 Metas/vaquinhas com barra de progresso": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674862
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791317128862
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791317929804
+      }
+    ],
+    "11.5 Lista das últimas despesas com comprovante visível (transparência)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674880
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791317933850
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791318414796
+      }
+    ],
+    "11.6 \"Meu extrato\": cobranças e pagamentos do próprio jogador": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674897
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791318418757
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791318609871
+      }
+    ],
+    "12.1 Algoritmo de sorteio por rodadas com testes unitários (cores, equilíbrio, sobras, seed)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674919
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791318615526
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791318869432
+      }
+    ],
+    "12.2 UI pública do sorteio: montar lista (cadastrados ou nomes livres + nível), nº de times e cores": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674940
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791318880022
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791319186696
+      }
+    ],
+    "12.3 Ações \"sortear de novo\" e \"copiar resultado\" (texto WhatsApp); persistência em localStorage": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674962
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791319191226
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791319496274
+      }
+    ],
+    "13.1 Manifest + ícones (maskable) + service worker (app shell, network-first, aviso offline)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292674979
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791319503450
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791321446155
+      }
+    ],
+    "13.2 Verificação de instalação no Safari/iOS e Chrome/Android": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292675009
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791321454341
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791321650474
+      }
+    ],
+    "14.1 Seed com 10 jogadores e 6 meses de lançamentos/cobranças para popular dashboards": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292675031
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791321657020
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791321956584
+      }
+    ],
+    "14.2 README: setup local, variáveis de ambiente, migrations (Supabase CLI) e deploy na Vercel": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292675050
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791321961158
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791322187570
+      }
+    ],
+    "14.3 Configurar Vercel Cron (mensalidades e recorrentes) e CRON_SECRET; documentar": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292675071
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791322191933
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791322501704
+      }
+    ],
+    "15.1 Fluxo cobrança → comprovante → aprovação → lançamento de receita": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292675089
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791322507837
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791417245616
+      }
+    ],
+    "15.2 Idempotência dos crons (mensalidades e recorrentes)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292675113
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791417249902
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791417553634
+      }
+    ],
+    "15.3 Testes de RLS: jogador não lê cobranças de terceiros nem acessa transactions direto": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791292675134
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791417559097
+      },
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791417873234
+      }
+    ],
+    "1. Setup do projeto e fundação": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791294068773
+      }
+    ],
+    "2. Banco de dados e segurança (migrations via Supabase CLI)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791296062559
+      }
+    ],
+    "3. Autenticação e autorização": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791298406946
+      }
+    ],
+    "4. Configurações (admin)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791303286176
+      }
+    ],
+    "5. Jogadores (admin)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791304222155
+      }
+    ],
+    "6. Categorias e lançamentos (admin/tesoureiro)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791310895576
+      }
+    ],
+    "7. Despesas recorrentes + cron": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791312098654
+      }
+    ],
+    "8. Cobranças + cron de mensalidades": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791313612631
+      }
+    ],
+    "9. Pagamento via Pix": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791315536882
+      }
+    ],
+    "10. Inadimplentes (admin/tesoureiro)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791316245765
+      }
+    ],
+    "11. Dashboards (jogadores logados)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791318609925
+      }
+    ],
+    "12. Sorteio de times (público)": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791319496308
+      }
+    ],
+    "13. PWA": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791321650520
+      }
+    ],
+    "14. Seed, documentação e deploy": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791322501751
+      }
+    ],
+    "15. Testes de integração e RLS": [
+      {
+        "executionId": "2a632832-c29e-4024-a472-f78e7eb397a8",
+        "chatSessionId": "sess_519f4570-eb88-4f4c-b951-cd13a98176af",
+        "timestamp": 1791417873285
+      }
+    ],
+    "17.1 Funções auxiliares de autorização": [
+      {
+        "executionId": "840544f0-9bc9-4bb0-8a58-f401b4a41b34",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791515798063
+      }
+    ],
+    "18.1 Evoluir carregamento de sessão/perfil para resolver memberships e futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694387
+      },
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549701661
+      },
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563563641
+      }
+    ],
+    "18.2 Evoluir middleware para onboarding e rotas públicas": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694428
+      },
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549702399
+      },
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563564903
+      }
+    ],
+    "18.3 Ação de logout visível na UI": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694458
+      },
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549703426
+      },
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563565741
+      }
+    ],
+    "19.1 Fluxo \"solicitar ser presidente\"": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694485
+      },
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563574473
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791569726025
+      }
+    ],
+    "19.2 Tela do system_admin: solicitações de presidente (listar/aprovar) com histórico": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694519
+      },
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563575134
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791570088335
+      }
+    ],
+    "19.3 Tela do system_admin: listar todos os futebóis": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694544
+      },
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563575336
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791570222506
+      }
+    ],
+    "20.1 Criação atômica de futebol (`createClub`)": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694573
+      },
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563575600
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791569727058
+      }
+    ],
+    "20.2 Página pública de convite `/convite/<codigo>`": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694595
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791570234232
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791575793234
+      }
+    ],
+    "20.3 Tela de membros: aprovar (criar/vincular jogador) e recusar": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694622
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791570235528
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791575794515
+      }
+    ],
+    "20.4 Promoção/rebaixamento de papéis com guarda do último presidente": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694668
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791570236982
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791575795722
+      }
+    ],
+    "21.1 Escopar Configurações ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694703
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791575821016
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791576626114
+      }
+    ],
+    "21.2 Escopar Jogadores ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694742
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791575822002
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791576630715
+      }
+    ],
+    "21.3 Escopar Categorias ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694783
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791575823031
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791576631079
+      }
+    ],
+    "21.4 Escopar Lançamentos ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694806
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791576646228
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577236665
+      }
+    ],
+    "21.5 Escopar Cobranças ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694828
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791576647230
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577237800
+      }
+    ],
+    "21.6 Escopar Despesas recorrentes ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694857
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791576648356
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577238923
+      }
+    ],
+    "21.7 Escopar Inadimplentes ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694883
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791576649465
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577239744
+      }
+    ],
+    "21.8 Escopar Dashboards e \"Meu extrato\" ao futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694907
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577249775
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577846378
+      }
+    ],
+    "21.9 Escopar Pix à configuração do futebol ativo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694929
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577249352
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577846728
+      }
+    ],
+    "21.10 Evoluir crons para iterar por futebol": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694958
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577250155
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577847470
+      }
+    ],
+    "22. Checkpoint — garantir que os testes passam": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549694985
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577866906
+      }
+    ],
+    "23.1 Sidebar lateral (drawer mobile-first) substituindo a nav do topo": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695019
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577879660
+      },
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791578268123
+      }
+    ],
+    "23.2 Club switcher e entrada de admin de plataforma na sidebar": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695043
+      }
+    ],
+    "24.1 Reescrever `seed.sql` para multi-tenant": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695067
+      }
+    ],
+    "24.2 Atualizar README/docs para o modelo multi-tenant": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695090
+      }
+    ],
+    "25.1 Isolamento entre futebóis (RLS)": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695115
+      }
+    ],
+    "25.2 Escopo do jogador e bypass do system_admin": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695140
+      }
+    ],
+    "25.3 Fluxos de ciclo de vida e idempotência por clube": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695183
+      }
+    ],
+    "26. Checkpoint final — garantir que os testes passam": [
+      {
+        "executionId": "4c1aa0fc-131b-45f7-bf2c-c0427d54c146",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791549695206
+      }
+    ],
+    "18. Auth e onboarding \"sem futebol\"": [
+      {
+        "executionId": "2102be12-49c8-41f9-a50f-7b9494081dc7",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791563565774
+      }
+    ],
+    "19. Admin de plataforma (system_admin)": [
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791570222552
+      }
+    ],
+    "20. Ciclo de vida do futebol (presidente)": [
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791575795758
+      }
+    ],
+    "21. Refatorar módulos existentes para o escopo do futebol": [
+      {
+        "executionId": "8f23eae7-3fde-4c12-8b2f-bcbe15b1d1f5",
+        "chatSessionId": "sess_1cdd0590-f53e-4677-a196-062d1138462d",
+        "timestamp": 1791577847531
+      }
+    ]
+  }
+}

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#16a34a" />
+    <title>FutCaixa — Offline</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100dvh;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+        padding: 2rem 1.5rem;
+        font-family:
+          system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+          sans-serif;
+        text-align: center;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      .mark {
+        width: 96px;
+        height: 96px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.4rem;
+        line-height: 1.3;
+      }
+      p {
+        margin: 0;
+        max-width: 32ch;
+        color: #475569;
+        line-height: 1.5;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+        background: #16a34a;
+        color: #ffffff;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      button {
+        margin-top: 0.5rem;
+        padding: 0.7rem 1.4rem;
+        border: 0;
+        border-radius: 0.75rem;
+        background: #16a34a;
+        color: #ffffff;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:active {
+        transform: translateY(1px);
+      }
+      @media (prefers-color-scheme: dark) {
+        body {
+          background: #0b1220;
+          color: #e2e8f0;
+        }
+        p {
+          color: #94a3b8;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <img class="mark" src="/icon.svg" alt="FutCaixa" width="96" height="96" />
+    <span class="badge">Você está offline</span>
+    <h1>Sem conexão no momento</h1>
+    <p>
+      O FutCaixa abriu, mas os dados não estão disponíveis agora porque você está
+      sem internet. Assim que a conexão voltar, atualize para ver os valores mais
+      recentes.
+    </p>
+    <button type="button" onclick="window.location.reload()">
+      Tentar novamente
+    </button>
+  </body>
+</html>
