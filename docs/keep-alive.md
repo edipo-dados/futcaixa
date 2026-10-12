@@ -13,8 +13,8 @@ banco, sem sessão, resposta JSON mínima (`{"status":"ok"}`).
 
 1. Crie conta em https://cron-job.org e vá em **Cronjobs → Create cronjob**.
 2. **Title:** `futcaixa keep-alive`
-3. **URL:** `https://<SEU-SERVICO>.onrender.com/api/health`
-   (troque pela URL pública do seu web service no Render)
+3. **URL:** `https://futcaixa.onrender.com/api/health`
+   (URL pública do web service no Render)
 4. **Schedule:** escolha **"Custom"** / expressão cron. Recomendado:
 
    ```
