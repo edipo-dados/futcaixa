@@ -23,6 +23,14 @@
 # Observação (Free): o web service "dorme" após 15 min sem tráfego; o primeiro
 # acesso após ocioso sofre cold start (~1 min). Para eliminar, troque `plan:
 # free` por um plano pago.
+#
+# IMPORTANTE — variáveis NEXT_PUBLIC_* são embutidas no BUILD:
+#   NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY são "inlined" pelo
+#   Next durante `next build`. Elas PRECISAM estar definidas no Render ANTES de
+#   buildar — senão o bundle sai com valor vazio e o app quebra em runtime com
+#   "Invalid supabaseUrl". Ao criar o Blueprint, preencha os 4 valores
+#   (`sync: false`) e, se o build já rodou vazio, faça um "Manual Deploy >
+#   Clear build cache & deploy" depois de preencher.
 
 services:
   # ── Aplicação Next.js (SSR + Server Actions + API) ──────────────────────
@@ -37,8 +45,9 @@ services:
     healthCheckPath: /login
     envVars:
       - key: NODE_VERSION
-        value: "20"
+        value: "22"
       # Segredos: preencher no painel do Render (não versionar valores).
+      # As duas NEXT_PUBLIC_* são necessárias JÁ NO BUILD (inlined).
       - key: NEXT_PUBLIC_SUPABASE_URL
         sync: false
       - key: NEXT_PUBLIC_SUPABASE_ANON_KEY

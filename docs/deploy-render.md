@@ -69,8 +69,13 @@ Crie **dois jobs**, cada um com:
   para eliminar.
 - **Porta:** nunca fixe `3000` em produção — o Render define `PORT` (default
   10000). O `start` já usa `-p ${PORT:-3000}`.
-- **Build standalone:** `next.config.mjs` usa `output: "standalone"` para um
-  boot mais leve.
+- **`NEXT_PUBLIC_*` são embutidas no BUILD:** `NEXT_PUBLIC_SUPABASE_URL` e
+  `NEXT_PUBLIC_SUPABASE_ANON_KEY` são "inlined" pelo Next durante `next build`.
+  Defina-as no Render **antes** de buildar. Se o build já rodou sem elas (erro
+  "Invalid supabaseUrl" em runtime), preencha os valores e faça **Manual Deploy
+  → Clear build cache & deploy** para reconstruir com as variáveis presentes.
+- **Node:** use Node 22 (`NODE_VERSION=22`) — o `@supabase/supabase-js` avisa
+  que Node ≤ 20 será descontinuado.
 - **Cron Jobs do Render são pagos:** não há `plan: free` para `type: cron`
   (daí usarmos um agendador externo no Passo 2). Se migrar para um plano pago,
   dá para declarar os dois `type: cron` no `render.yaml` com `plan: starter`.
