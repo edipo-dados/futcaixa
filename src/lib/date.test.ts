@@ -4,6 +4,9 @@ import {
   currentPeriod,
   defaultDueDate,
   formatDate,
+  formatPeriodLabel,
+  isValidPeriod,
+  shiftPeriod,
   todayISO,
   toPeriod,
 } from "@/lib/date";
@@ -92,5 +95,47 @@ describe("defaultDueDate", () => {
     expect(() => defaultDueDate(0)).toThrow();
     expect(() => defaultDueDate(29)).toThrow();
     expect(() => defaultDueDate(10.5)).toThrow();
+  });
+});
+
+describe("isValidPeriod", () => {
+  it("aceita YYYY-MM com mês 01..12", () => {
+    expect(isValidPeriod("2026-01")).toBe(true);
+    expect(isValidPeriod("2026-12")).toBe(true);
+  });
+  it("rejeita formato inválido ou mês fora de 01..12", () => {
+    expect(isValidPeriod("2026-00")).toBe(false);
+    expect(isValidPeriod("2026-13")).toBe(false);
+    expect(isValidPeriod("2026-1")).toBe(false);
+    expect(isValidPeriod("202601")).toBe(false);
+    expect(isValidPeriod("abc")).toBe(false);
+  });
+});
+
+describe("shiftPeriod", () => {
+  it("soma e subtrai meses dentro do ano", () => {
+    expect(shiftPeriod("2026-10", 1)).toBe("2026-11");
+    expect(shiftPeriod("2026-10", -1)).toBe("2026-09");
+  });
+  it("vira o ano para frente e para trás", () => {
+    expect(shiftPeriod("2026-12", 1)).toBe("2027-01");
+    expect(shiftPeriod("2026-01", -1)).toBe("2025-12");
+  });
+  it("desloca 11 meses para trás (janela de 12 meses)", () => {
+    expect(shiftPeriod("2026-10", -11)).toBe("2025-11");
+  });
+  it("rejeita período inválido", () => {
+    expect(() => shiftPeriod("2026", 1)).toThrow();
+  });
+});
+
+describe("formatPeriodLabel", () => {
+  it("formata YYYY-MM como 'Mês de AAAA' em pt-BR", () => {
+    expect(formatPeriodLabel("2026-10")).toBe("Outubro de 2026");
+    expect(formatPeriodLabel("2026-01")).toBe("Janeiro de 2026");
+    expect(formatPeriodLabel("2026-12")).toBe("Dezembro de 2026");
+  });
+  it("devolve a entrada quando o formato é inválido", () => {
+    expect(formatPeriodLabel("abc")).toBe("abc");
   });
 });

@@ -31,6 +31,8 @@ import {
 
 interface CategoryBreakdownChartProps {
   data: CategorySlice[];
+  /** Rótulo do valor no tooltip (ex.: "Despesa" ou "Receita"). */
+  valueLabel?: string;
 }
 
 interface ChartRow {
@@ -38,7 +40,10 @@ interface ChartRow {
   valor: number;
 }
 
-export function CategoryBreakdownChart({ data }: CategoryBreakdownChartProps) {
+export function CategoryBreakdownChart({
+  data,
+  valueLabel = "Despesa",
+}: CategoryBreakdownChartProps) {
   if (data.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
@@ -49,7 +54,7 @@ export function CategoryBreakdownChart({ data }: CategoryBreakdownChartProps) {
 
   const rows: ChartRow[] = data.map((slice) => ({
     categoria: slice.categoryName,
-    valor: centsToReais(slice.expenseCents),
+    valor: centsToReais(slice.valueCents),
   }));
 
   // Altura proporcional ao número de categorias, com um piso para poucas
@@ -76,7 +81,7 @@ export function CategoryBreakdownChart({ data }: CategoryBreakdownChartProps) {
           width={110}
         />
         <Tooltip
-          formatter={(value: number) => [reaisToBRL(value), "Despesa"]}
+          formatter={(value: number) => [reaisToBRL(value), valueLabel]}
           cursor={{ fill: "hsl(var(--muted))" }}
           contentStyle={{
             borderRadius: 8,

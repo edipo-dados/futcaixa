@@ -2,9 +2,10 @@
 
 import {
   Bar,
-  BarChart,
   CartesianGrid,
+  ComposedChart,
   Legend,
+  Line,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -38,7 +39,15 @@ interface ChartRow {
   label: string;
   receitas: number;
   despesas: number;
+  resultado: number;
 }
+
+/** Rótulo pt-BR de cada série no tooltip/legenda. */
+const SERIES_LABEL: Record<string, string> = {
+  receitas: "Receitas",
+  despesas: "Despesas",
+  resultado: "Resultado",
+};
 
 export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
   const hasData = data.some(
@@ -58,11 +67,12 @@ export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
     label: formatMonthLabel(point.month),
     receitas: centsToReais(point.incomeCents),
     despesas: centsToReais(point.expenseCents),
+    resultado: centsToReais(point.incomeCents - point.expenseCents),
   }));
 
   return (
     <ResponsiveContainer width="100%" height={288}>
-      <BarChart data={rows} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
+      <ComposedChart data={rows} margin={{ top: 8, right: 8, bottom: 0, left: 8 }}>
         <CartesianGrid
           strokeDasharray="3 3"
           stroke="hsl(var(--border))"
@@ -82,7 +92,7 @@ export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
         <Tooltip
           formatter={(value: number, name) => [
             reaisToBRL(value),
-            name === "receitas" ? "Receitas" : "Despesas",
+            SERIES_LABEL[String(name)] ?? String(name),
           ]}
           labelFormatter={(label) => `Mês ${label}`}
           contentStyle={{
@@ -93,9 +103,7 @@ export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
         />
         <Legend
           wrapperStyle={{ fontSize: 12 }}
-          formatter={(value) =>
-            value === "receitas" ? "Receitas" : "Despesas"
-          }
+          formatter={(value) => SERIES_LABEL[String(value)] ?? String(value)}
         />
         <Bar
           dataKey="receitas"
@@ -107,7 +115,16 @@ export function IncomeExpenseChart({ data }: IncomeExpenseChartProps) {
           fill="hsl(0 84.2% 60.2%)"
           radius={[4, 4, 0, 0]}
         />
-      </BarChart>
+        {/* Linha de resultado mensal (receitas − despesas): facilita ver se o
+            mês fechou positivo ou negativo. */}
+        <Line
+          type="monotone"
+          dataKey="resultado"
+          stroke="hsl(217 91% 60%)"
+          strokeWidth={2}
+          dot={{ r: 2 }}
+        />
+      </ComposedChart>
     </ResponsiveContainer>
   );
 }

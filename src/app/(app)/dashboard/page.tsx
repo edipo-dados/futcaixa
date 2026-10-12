@@ -5,10 +5,13 @@ import { CategoryBreakdownChart } from "@/components/charts/CategoryBreakdownCha
 import { IncomeExpenseChart } from "@/components/charts/IncomeExpenseChart";
 import { GoalsSection } from "@/components/GoalsSection";
 import { RecentExpensesSection } from "@/components/RecentExpensesSection";
+import { RecentIncomesSection } from "@/components/RecentIncomesSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getMembershipSession } from "@/lib/auth/membership";
-import { currentPeriod } from "@/lib/date";
+import { currentPeriod, isValidPeriod } from "@/lib/date";
 import { fromCents } from "@/lib/money";
+
+import { MonthPicker } from "./month-picker";
 
 import {
   getActiveGoals,
@@ -17,9 +20,13 @@ import {
   getCategoryBreakdownMonth,
   getCategoryBreakdownYear,
   getCurrentBalanceCents,
+  getIncomeBreakdownMonth,
+  getIncomeBreakdownYear,
   getIncomeExpenseSeries,
   getMonthSummary,
+  getPlayerCounts,
   getRecentExpenses,
+  getRecentIncomes,
   getRunwayMonths,
 } from "./data";
 
@@ -65,7 +72,11 @@ function formatRunway(months: number | null): string {
   return `${value} ${months === 1 ? "mês" : "meses"}`;
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mes?: string | string[] }>;
+}) {
   const session = await getMembershipSession();
 
   // Sem sessão → login (defesa em profundidade junto ao middleware/layout).
@@ -79,7 +90,17 @@ export default async function DashboardPage() {
   }
 
   const clubId = session.activeClub.clubId;
-  const period = currentPeriod();
+  const nowPeriod = currentPeriod();
+
+  // Mês selecionado via `?mes=YYYY-MM`. Sem valor/ inválido ou futuro → mês
+  // atual. Não deixamos navegar para o futuro (não há dados além do mês atual).
+  const rawMes = Array.isArray((await searchParams).mes)
+    ? (await searchParams).mes?.[0]
+    : (await searchParams).mes;
+  const period =
+    typeof rawMes === "string" && isValidPeriod(rawMes) && rawMes <= nowPeriod
+      ? rawMes
+      : nowPeriod;
   const year = Number(period.slice(0, 4));
 
   const [
@@ -91,8 +112,12 @@ export default async function DashboardPage() {
     balanceSeries,
     categoryMonth,
     categoryYear,
+    incomeMonth,
+    incomeYear,
+    playerCounts,
     goals,
     recentExpenses,
+    recentIncomes,
   ] = await Promise.all([
     getCurrentBalanceCents(clubId, period),
     getMonthSummary(clubId, period),
@@ -102,25 +127,38 @@ export default async function DashboardPage() {
     getBalanceSeries(clubId, period, 12),
     getCategoryBreakdownMonth(clubId, period),
     getCategoryBreakdownYear(clubId, year),
+    getIncomeBreakdownMonth(clubId, period),
+    getIncomeBreakdownYear(clubId, year),
+    getPlayerCounts(clubId),
     getActiveGoals(clubId),
     getRecentExpenses(clubId, 10),
+    getRecentIncomes(clubId, 10),
   ]);
+
+  const resultCents = summary.incomeCents - summary.expenseCents;
 
   const cards = [
     { label: "Saldo atual", value: fromCents(balanceCents) },
     { label: "Receitas do mês", value: fromCents(summary.incomeCents) },
     { label: "Despesas do mês", value: fromCents(summary.expenseCents) },
+    { label: "Resultado do mês", value: fromCents(resultCents) },
+    { label: "Jogadores ativos", value: String(playerCounts.ativos) },
+    { label: "Mensalistas", value: String(playerCounts.mensalistas) },
     { label: "Adimplência do mês", value: formatRate(rate) },
     { label: "Runway (média 3 meses)", value: formatRunway(runwayMonths) },
   ];
 
   return (
     <main className="container py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <p className="mt-1 text-muted-foreground">
-          Visão geral do caixa no mês atual.
-        </p>
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <p className="mt-1 text-muted-foreground">
+            Visão geral do caixa de{" "}
+            <span className="font-medium">{session.activeClub.clubName}</span>.
+          </p>
+        </div>
+        <MonthPicker period={period} currentPeriodValue={nowPeriod} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -163,22 +201,44 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">
+              Receitas por categoria (mês)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CategoryBreakdownChart data={incomeMonth} valueLabel="Receita" />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">
               Despesas por categoria (mês)
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <CategoryBreakdownChart data={categoryMonth} />
+            <CategoryBreakdownChart data={categoryMonth} valueLabel="Despesa" />
           </CardContent>
         </Card>
 
-        <Card className="lg:col-span-2">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">
+              Receitas por categoria (ano {year})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CategoryBreakdownChart data={incomeYear} valueLabel="Receita" />
+          </CardContent>
+        </Card>
+
+        <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-base">
               Despesas por categoria (ano {year})
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <CategoryBreakdownChart data={categoryYear} />
+            <CategoryBreakdownChart data={categoryYear} valueLabel="Despesa" />
           </CardContent>
         </Card>
       </section>
@@ -186,7 +246,8 @@ export default async function DashboardPage() {
       {/* Metas e vaquinhas (Req 8.6) — só aparece quando há metas ativas. */}
       <GoalsSection goals={goals} />
 
-      {/* Últimas despesas com comprovante (Req 8.7) — transparência do caixa. */}
+      {/* Transparência do caixa: últimas receitas e últimas despesas. */}
+      <RecentIncomesSection incomes={recentIncomes} />
       <RecentExpensesSection expenses={recentExpenses} />
     </main>
   );

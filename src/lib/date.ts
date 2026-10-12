@@ -149,3 +149,61 @@ export function defaultDueDate(dueDay: number, now: Date = new Date()): string {
   const dd = String(dueDay).padStart(2, "0");
   return `${targetYear}-${mm}-${dd}`;
 }
+
+/**
+ * Valida um período no formato `YYYY-MM` (mês 01..12). Usado para sanear o
+ * filtro de mês do dashboard vindo da URL.
+ */
+export function isValidPeriod(value: string): boolean {
+  const m = /^(\d{4})-(\d{2})$/.exec(value);
+  if (!m) return false;
+  const month = Number(m[2]);
+  return month >= 1 && month <= 12;
+}
+
+/**
+ * Desloca um período `YYYY-MM` em `months` (pode ser negativo), devolvendo
+ * outro `YYYY-MM`. Aritmética civil (ano*12 + mês), sem fuso. Centralizado aqui
+ * para o dashboard (séries de 12 meses e navegação anterior/próximo do filtro).
+ */
+export function shiftPeriod(period: string, months: number): string {
+  const m = /^(\d{4})-(\d{2})$/.exec(period);
+  if (!m) {
+    throw new Error(`Período inválido: "${period}" (esperado YYYY-MM).`);
+  }
+  const year = Number(m[1]);
+  const monthIdx = Number(m[2]) - 1; // 0..11
+  const total = year * 12 + monthIdx + months;
+  const ny = Math.floor(total / 12);
+  const nm = total % 12;
+  return `${ny}-${String(nm + 1).padStart(2, "0")}`;
+}
+
+/** Nomes dos meses em pt-BR (1..12 → índice 0..11). */
+const MONTH_NAMES_PT = [
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
+] as const;
+
+/**
+ * Formata um período `YYYY-MM` como rótulo pt-BR longo, ex.: "Outubro de 2026".
+ * Usado no seletor de mês do dashboard.
+ */
+export function formatPeriodLabel(period: string): string {
+  const m = /^(\d{4})-(\d{2})$/.exec(period);
+  if (!m) return period;
+  const year = m[1];
+  const monthIdx = Number(m[2]) - 1;
+  const name = MONTH_NAMES_PT[monthIdx] ?? period;
+  return `${name} de ${year}`;
+}

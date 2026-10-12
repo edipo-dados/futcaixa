@@ -1,6 +1,6 @@
 import "server-only";
 
-import { currentPeriod } from "@/lib/date";
+import { currentPeriod, shiftPeriod } from "@/lib/date";
 import { computeRunwayMonths } from "@/lib/runway";
 import { createClient } from "@/lib/supabase/server";
 
@@ -156,10 +156,13 @@ export interface BalancePoint {
   balanceCents: number;
 }
 
-/** Fatia de despesa por categoria. */
+/**
+ * Fatia de uma categoria (valor somado). Serve tanto para despesa quanto para
+ * receita — o significado do valor depende do loader que a produz.
+ */
 export interface CategorySlice {
   categoryName: string;
-  expenseCents: number;
+  valueCents: number;
 }
 
 interface MonthlySeriesRow {
@@ -174,17 +177,10 @@ interface CategoryBreakdownRow {
   expense_cents: number;
 }
 
-/**
- * Soma `months` meses ao período `YYYY-MM` informado (delta pode ser
- * negativo). Opera só sobre ano/mês civis, sem fuso, para calcular a janela
- * dos gráficos (ex.: 12 meses encerrando no período corrente).
- */
-function shiftPeriod(period: string, months: number): string {
-  const [yearStr, monthStr] = period.split("-");
-  const base = Number(yearStr) * 12 + (Number(monthStr) - 1) + months;
-  const year = Math.floor(base / 12);
-  const month = (base % 12) + 1;
-  return `${year}-${String(month).padStart(2, "0")}`;
+interface IncomeBreakdownRow {
+  month: string;
+  category_name: string;
+  income_cents: number;
 }
 
 /**
@@ -291,9 +287,9 @@ export async function getCategoryBreakdownMonth(
   return data
     .map((row) => ({
       categoryName: row.category_name,
-      expenseCents: row.expense_cents ?? 0,
+      valueCents: row.expense_cents ?? 0,
     }))
-    .sort((a, b) => b.expenseCents - a.expenseCents);
+    .sort((a, b) => b.valueCents - a.valueCents);
 }
 
 /**
@@ -325,8 +321,67 @@ export async function getCategoryBreakdownYear(
   }
 
   return Array.from(byCategory.entries())
-    .map(([categoryName, expenseCents]) => ({ categoryName, expenseCents }))
-    .sort((a, b) => b.expenseCents - a.expenseCents);
+    .map(([categoryName, valueCents]) => ({ categoryName, valueCents }))
+    .sort((a, b) => b.valueCents - a.valueCents);
+}
+
+/**
+ * Receitas por categoria do mês informado, a partir de `v_income_breakdown`,
+ * escopadas ao futebol ATIVO. Espelho de `getCategoryBreakdownMonth` para o
+ * lado da receita (mensalidade, avulso, doação...). Ordenado desc por valor.
+ */
+export async function getIncomeBreakdownMonth(
+  clubId: string,
+  period: string = currentPeriod(),
+): Promise<CategorySlice[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("v_income_breakdown")
+    .select("month, category_name, income_cents")
+    .eq("club_id", clubId)
+    .eq("month", period)
+    .returns<IncomeBreakdownRow[]>();
+
+  if (error || !data) return [];
+
+  return data
+    .map((row) => ({
+      categoryName: row.category_name,
+      valueCents: row.income_cents ?? 0,
+    }))
+    .sort((a, b) => b.valueCents - a.valueCents);
+}
+
+/**
+ * Receitas por categoria acumuladas no ano `year`, a partir de
+ * `v_income_breakdown`, escopadas ao futebol ATIVO. Agrega por categoria.
+ */
+export async function getIncomeBreakdownYear(
+  clubId: string,
+  year: number = Number(currentPeriod().slice(0, 4)),
+): Promise<CategorySlice[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("v_income_breakdown")
+    .select("month, category_name, income_cents")
+    .eq("club_id", clubId)
+    .gte("month", `${year}-01`)
+    .lte("month", `${year}-12`)
+    .returns<IncomeBreakdownRow[]>();
+
+  if (error || !data) return [];
+
+  const byCategory = new Map<string, number>();
+  for (const row of data) {
+    const current = byCategory.get(row.category_name) ?? 0;
+    byCategory.set(row.category_name, current + (row.income_cents ?? 0));
+  }
+
+  return Array.from(byCategory.entries())
+    .map(([categoryName, valueCents]) => ({ categoryName, valueCents }))
+    .sort((a, b) => b.valueCents - a.valueCents);
 }
 
 /* ===================================================================== *
@@ -498,5 +553,98 @@ export async function getRecentExpenses(
     description: row.description,
     categoryName: row.category_name,
     proofPath: row.proof_path,
+  }));
+}
+
+/* ===================================================================== *
+ * Contagem de jogadores (card do dashboard)                             *
+ * ===================================================================== */
+
+/** Contagens de jogadores do clube para o card do dashboard. */
+export interface PlayerCounts {
+  /** Jogadores com status 'ativo' (não excluídos). */
+  ativos: number;
+  /** Jogadores mensalistas ativos (type 'mensalista', status 'ativo'). */
+  mensalistas: number;
+}
+
+/**
+ * Conta jogadores do futebol ATIVO: total de ativos e quantos são mensalistas
+ * ativos. Lê a tabela `players` (RLS permite SELECT a membros do clube), sempre
+ * escopada por `club_id` e ignorando os soft-deletados.
+ */
+export async function getPlayerCounts(clubId: string): Promise<PlayerCounts> {
+  const supabase = await createClient();
+
+  const [ativosRes, mensalistasRes] = await Promise.all([
+    supabase
+      .from("players")
+      .select("id", { count: "exact", head: true })
+      .eq("club_id", clubId)
+      .eq("status", "ativo")
+      .is("deleted_at", null),
+    supabase
+      .from("players")
+      .select("id", { count: "exact", head: true })
+      .eq("club_id", clubId)
+      .eq("status", "ativo")
+      .eq("type", "mensalista")
+      .is("deleted_at", null),
+  ]);
+
+  return {
+    ativos: ativosRes.count ?? 0,
+    mensalistas: mensalistasRes.count ?? 0,
+  };
+}
+
+/* ===================================================================== *
+ * Últimas receitas (transparência das entradas)                        *
+ * ===================================================================== */
+
+/** Receita recente exibida no dashboard (transparência das entradas). */
+export interface RecentIncome {
+  id: string;
+  /** Data da receita (`YYYY-MM-DD`). */
+  occurredOn: string;
+  amountCents: number;
+  description: string;
+  categoryName: string;
+}
+
+interface RecentIncomeRow {
+  id: string;
+  occurred_on: string;
+  amount_cents: number;
+  description: string;
+  category_name: string;
+}
+
+/**
+ * Lista as últimas `limit` receitas a partir de `v_recent_incomes`, escopadas
+ * ao futebol ATIVO. Espelho de `getRecentExpenses` para o lado da receita. A
+ * view já vem ordenada da mais recente para a mais antiga. Nunca expõe jogador.
+ */
+export async function getRecentIncomes(
+  clubId: string,
+  limit = 10,
+): Promise<RecentIncome[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("v_recent_incomes")
+    .select("id, occurred_on, amount_cents, description, category_name")
+    .eq("club_id", clubId)
+    .limit(limit)
+    .returns<RecentIncomeRow[]>();
+
+  if (error || !data) return [];
+
+  return data.map((row) => ({
+    id: row.id,
+    occurredOn: row.occurred_on,
+    amountCents: row.amount_cents ?? 0,
+    description: row.description,
+    categoryName: row.category_name,
   }));
 }
