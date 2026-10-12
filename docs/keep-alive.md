@@ -15,14 +15,18 @@ banco, sem sessão, resposta JSON mínima (`{"status":"ok"}`).
 2. **Title:** `futcaixa keep-alive`
 3. **URL:** `https://<SEU-SERVICO>.onrender.com/api/health`
    (troque pela URL pública do seu web service no Render)
-4. **Schedule:** escolha **"Custom"** / expressão cron e use:
+4. **Schedule:** escolha **"Custom"** / expressão cron. Recomendado:
 
    ```
-   */10 8-22 * * *
+   */14 8-22 * * *
    ```
 
-   - Dispara a cada 10 min, das **08:00 às 22:59**.
+   - Dispara a cada **14 min**, das **08:00 às 22:59**. O Render dorme com 15
+     min de inatividade, então 14 min mantém o app vivo com folga mínima e
+     gasta MENOS cota do Free que 10 min.
    - Entre **23:00 e 07:59 não dispara** → o app dorme à noite (Req do dono).
+   - Se preferir mais margem contra cold start, use `*/10 8-22 * * *` (a cada
+     10 min), ao custo de mais horas consumidas.
 5. **Timezone:** selecione **America/Sao_Paulo** (BRT). É o que faz a janela
    23:00–08:00 bater no horário de Brasília. Se o agendador só aceitar UTC,
    use `*/10 11-23,0-1 * * *` (equivalente aproximado: 08:00–22:59 BRT = 11:00
@@ -34,7 +38,7 @@ banco, sem sessão, resposta JSON mínima (`{"status":"ok"}`).
 
 - **Cota do Free:** mesmo com a pausa noturna, o keep-alive consome horas de
   instância. Se o serviço começar a ficar indisponível perto do fim do mês,
-  reduza a frequência (ex.: a cada 14 min: `*/14 8-22 * * *`) ou migre para um
+  reduza a frequência (ex.: a cada 20 min: `*/20 8-22 * * *`) ou migre para um
   plano pago (sem sleep, sem truque).
 - **Não confundir com os crons de negócio:** este ping é só para manter o app
   acordado. Os crons que geram mensalidades/recorrentes continuam sendo os dois
