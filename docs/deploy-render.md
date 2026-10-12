@@ -4,10 +4,12 @@ O FutCaixa é um app **Next.js full-stack** (SSR + Server Actions + middleware +
 rotas de API). No Render ele roda como **um único Web Service** Node — front e
 back juntos. O banco continua no **Supabase** (independente do host).
 
-Os dois crons (mensalidades e recorrentes) rodam como **Cron Jobs** separados
-que chamam as rotas `/api/cron/*`, protegidas por `CRON_SECRET`.
+Os dois crons (mensalidades e recorrentes) chamam as rotas `/api/cron/*`,
+protegidas por `CRON_SECRET`. **No plano Free do Render não há Cron Jobs
+gratuitos** (só web services têm free tier), então agendamos os crons com um
+**serviço externo gratuito** (ver "Crons" abaixo).
 
-Tudo isso está declarado em [`render.yaml`](../render.yaml) (Blueprint).
+O web service está declarado em [`render.yaml`](../render.yaml) (Blueprint).
 
 ## Pré-requisitos
 
@@ -19,23 +21,18 @@ Tudo isso está declarado em [`render.yaml`](../render.yaml) (Blueprint).
   - `SUPABASE_SERVICE_ROLE_KEY` (secreto)
   - `CRON_SECRET` (gere com `openssl rand -hex 32`)
 
-## Opção A — Blueprint (recomendada)
+## Passo 1 — Web Service (Blueprint)
 
 1. Render → **New** → **Blueprint**.
 2. Conecte o repositório `edipo-dados/futcaixa`. O Render lê o `render.yaml` e
-   propõe criar: 1 Web Service (`futcaixa`) + 2 Cron Jobs.
-3. Em cada serviço, preencha as env vars marcadas como "secret" no `render.yaml`
-   (`sync: false`): as 4 do Supabase/cron no web service; `APP_URL` e
-   `CRON_SECRET` em cada cron job.
-4. Faça o primeiro deploy do web service. Ele recebe uma URL pública
-   `https://<nome>.onrender.com`.
-5. Copie essa URL e cole em **`APP_URL`** nos dois cron jobs (é o alvo do curl).
-   Importante: `CRON_SECRET` precisa ser **o mesmo valor** no web service e nos
-   dois cron jobs — senão a rota devolve 401.
+   propõe criar o Web Service `futcaixa`.
+3. Preencha as 4 env vars marcadas como "secret" (`sync: false`):
+   `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`,
+   `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`.
+4. Deploy. O serviço recebe uma URL pública `https://<nome>.onrender.com`.
+   Guarde essa URL — ela é usada no agendador dos crons (Passo 2).
 
-## Opção B — manual (sem Blueprint)
-
-Web Service:
+Alternativa manual (sem Blueprint):
 
 - **Runtime:** Node
 - **Build Command:** `npm ci && npm run build`
@@ -44,12 +41,26 @@ Web Service:
 - **Health Check Path:** `/login`
 - **Env vars:** as 4 acima + `NODE_VERSION=20`
 
-Cron Jobs (um por rota), ambos com schedule `0 6 * * *` (06:00 UTC = 03:00 BRT):
+## Passo 2 — Crons (agendador externo, grátis)
 
-- **Command:**
-  `curl --fail -H "Authorization: Bearer $CRON_SECRET" "$APP_URL/api/cron/gerar-mensalidades"`
+Os Cron Jobs nativos do Render são **pagos**. No Free, use um agendador externo
+gratuito para disparar as duas rotas 1x/dia. Qualquer um serve — exemplos:
+[cron-job.org](https://cron-job.org), Upstash QStash, EasyCron.
+
+Crie **dois jobs**, cada um com:
+
+- **Método:** GET
+- **URL:** `https://<nome>.onrender.com/api/cron/gerar-mensalidades`
   (e `.../gerar-recorrentes` no segundo)
-- **Env vars:** `APP_URL` (a URL do web service) e `CRON_SECRET` (o mesmo do web).
+- **Header:** `Authorization: Bearer <CRON_SECRET>`  ← mesmo valor que você pôs
+  no web service; senão a rota devolve 401
+- **Agendamento:** diário (ex.: 06:00 UTC = 03:00 BRT); ajuste ao seu fuso
+- **Timeout:** generoso (≥ 60s) — a 1ª chamada pode acordar o serviço (cold
+  start)
+
+> Dica: esses disparos diários também "acordam" o app perto do horário. Se
+> quiser evitar o sleep durante o dia, um ping extra a cada <15 min mantém vivo,
+> mas consome as horas gratuitas do mês — avalie antes.
 
 ## Notas
 
@@ -60,8 +71,8 @@ Cron Jobs (um por rota), ambos com schedule `0 6 * * *` (06:00 UTC = 03:00 BRT):
   10000). O `start` já usa `-p ${PORT:-3000}`.
 - **Build standalone:** `next.config.mjs` usa `output: "standalone"` para um
   boot mais leve.
-- **Fuso dos crons:** o schedule do Render é em **UTC**. `0 6 * * *` = 03:00 no
-  horário de Brasília. Ajuste se quiser outro horário.
-- **Alternativa de agendador:** qualquer serviço que faça um GET com o header
-  `Authorization: Bearer <CRON_SECRET>` nas rotas serve (cron-job.org, Upstash
-  QStash etc.) — útil se preferir não usar os Cron Jobs do Render.
+- **Cron Jobs do Render são pagos:** não há `plan: free` para `type: cron`
+  (daí usarmos um agendador externo no Passo 2). Se migrar para um plano pago,
+  dá para declarar os dois `type: cron` no `render.yaml` com `plan: starter`.
+- **Fuso dos crons:** defina o horário no agendador externo. Muitos usam UTC —
+  `0 6 * * *` (UTC) = 03:00 no horário de Brasília.
