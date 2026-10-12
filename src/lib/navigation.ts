@@ -53,6 +53,7 @@ export const APP_NAV_ITEMS: readonly NavItem[] = [
   { href: "/membros/papeis", label: "Papéis", roles: PRESIDENT_ONLY },
   { href: "/categorias", label: "Categorias", roles: PRESIDENT_ONLY },
   { href: "/configuracoes", label: "Configurações", roles: PRESIDENT_ONLY },
+  { href: "/sobre", label: "Sobre e Ajuda", roles: ALL_ROLES },
 ];
 
 /** Retorna apenas os itens de navegação visíveis para o papel informado. */
