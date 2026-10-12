@@ -156,6 +156,19 @@ export function PlayerForm({ mode, defaultValues, playerId }: PlayerFormProps) {
               <FieldError error={fieldErrors.nickname} />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="company">Empresa</Label>
+              <Input
+                id="company"
+                name="company"
+                defaultValue={defaultValues.company}
+                placeholder="Empresa onde trabalha (opcional)"
+                maxLength={100}
+                aria-invalid={!!fieldErrors.company || undefined}
+              />
+              <FieldError error={fieldErrors.company} />
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="email">E-mail</Label>

@@ -107,6 +107,13 @@ export const playerSchema = z
       .nullish()
       .transform(emptyToNull),
 
+    // ── Empresa onde trabalha (opcional) ────────────────────────────────
+    company: z
+      .string()
+      .max(100, "Empresa deve ter no máximo 100 caracteres.")
+      .nullish()
+      .transform(emptyToNull),
+
     // ── E-mail (opcional, mas válido quando presente — Req 2.1, 2.5) ────
     email: z
       .string()
@@ -199,6 +206,7 @@ export interface PlayerRow {
   nickname: string | null;
   email: string | null;
   phone: string | null;
+  company: string | null;
   type: PlayerType;
   status: PlayerStatus;
   skill_level: number;
@@ -220,6 +228,7 @@ export interface PlayerFormValues {
   nickname: string;
   email: string;
   phone: string;
+  company: string;
   type: PlayerType;
   status: PlayerStatus;
   skillLevel: string;
@@ -246,6 +255,7 @@ export function playerRowToFormValues(row: PlayerRow): PlayerFormValues {
     nickname: row.nickname ?? "",
     email: row.email ?? "",
     phone: row.phone ?? "",
+    company: row.company ?? "",
     type: row.type,
     status: row.status,
     skillLevel: String(row.skill_level),
@@ -263,6 +273,7 @@ export function emptyPlayerFormValues(): PlayerFormValues {
     nickname: "",
     email: "",
     phone: "",
+    company: "",
     type: "mensalista",
     status: "ativo",
     skillLevel: "2",

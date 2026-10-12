@@ -301,6 +301,7 @@ describe("playerRowToFormValues", () => {
     nickname: "Jô",
     email: "joao@email.com",
     phone: "11999998888",
+    company: "Vivo",
     type: "mensalista",
     status: "ativo",
     skill_level: 2,

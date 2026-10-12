@@ -44,7 +44,7 @@ async function loadPlayers(clubId: string): Promise<PlayerRow[]> {
   const { data, error } = await supabase
     .from("players")
     .select(
-      "id, name, nickname, email, phone, type, status, skill_level, is_exempt, exempt_reason, custom_monthly_cents, custom_drop_in_cents, deleted_at",
+      "id, name, nickname, email, phone, company, type, status, skill_level, is_exempt, exempt_reason, custom_monthly_cents, custom_drop_in_cents, deleted_at",
     )
     .eq("club_id", clubId)
     .is("deleted_at", null)
@@ -120,6 +120,12 @@ export default async function JogadoresPage() {
                 </p>
                 <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
                   <span>{TYPE_LABELS[p.type]}</span>
+                  {p.company ? (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span>{p.company}</span>
+                    </>
+                  ) : null}
                   <span aria-hidden="true">·</span>
                   <span
                     className={
