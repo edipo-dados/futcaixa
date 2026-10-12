@@ -84,7 +84,7 @@ const AUTH_PREFIXES = ["/login", "/cadastro", "/callback"] as const;
  * Rotas 100% públicas, acessíveis SEM autenticação (Requisito 1.7):
  * apenas a aba de Sorteio e a abertura de um link de convite.
  */
-const PUBLIC_PREFIXES = ["/sorteio", "/convite"] as const;
+const PUBLIC_PREFIXES = ["/sorteio", "/convite", "/api/health"] as const;
 
 /**
  * Rotas de administração da PLATAFORMA (system_admin). Alinhadas ao grupo
