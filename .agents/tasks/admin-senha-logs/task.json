@@ -1,0 +1,7 @@
+{
+  "task_id": "task-admin-senha-logs",
+  "task_description": "Reset de senha pelo presidente (RPC de autorização + Admin API + senha temporária exibida uma vez), aba 'Meu cadastro' para troca da própria senha, e logs de acesso (login + reset) visíveis apenas ao system_admin em /admin/logs. Migration apenas escrita (não aplicada); testes automatizados cobrem só lógica pura.",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003", "FEAT-004"],
+  "blocked_reason": null
+}
