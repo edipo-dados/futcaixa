@@ -12,6 +12,10 @@ import {
 } from "@/lib/validation/player";
 
 import { PlayerStatusToggle } from "./player-status-toggle";
+import { ResetPasswordForm } from "./reset-password-form";
+
+/** Linha de jogador com a indicação de conta de acesso vinculada. */
+type PlayerWithAccount = PlayerRow & { hasAccount: boolean };
 
 /**
  * Página de Jogadores (Server Component).
@@ -39,7 +43,7 @@ const STATUS_LABELS: Record<(typeof PLAYER_STATUSES)[number], string> = {
   inativo: "Inativo",
 };
 
-async function loadPlayers(clubId: string): Promise<PlayerRow[]> {
+async function loadPlayers(clubId: string): Promise<PlayerWithAccount[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("players")
@@ -52,7 +56,23 @@ async function loadPlayers(clubId: string): Promise<PlayerRow[]> {
     .returns<PlayerRow[]>();
 
   if (error || !data) return [];
-  return data;
+
+  // 2ª consulta: quais jogadores têm conta de acesso vinculada neste clube
+  // (membership ativa com user_id). Define `hasAccount` para habilitar o reset
+  // de senha apenas quando houver conta de acesso.
+  const { data: linked } = await supabase
+    .from("memberships")
+    .select("player_id")
+    .eq("club_id", clubId)
+    .eq("status", "ativo")
+    .not("player_id", "is", null)
+    .not("user_id", "is", null);
+
+  const linkedPlayerIds = new Set(
+    (linked ?? []).map((m) => m.player_id as string),
+  );
+
+  return data.map((p) => ({ ...p, hasAccount: linkedPlayerIds.has(p.id) }));
 }
 
 export default async function JogadoresPage() {
@@ -166,6 +186,12 @@ export default async function JogadoresPage() {
                   <PlayerStatusToggle
                     playerId={p.id}
                     currentStatus={p.status}
+                  />
+                ) : null}
+                {canManage ? (
+                  <ResetPasswordForm
+                    playerId={p.id}
+                    hasAccount={p.hasAccount}
                   />
                 ) : null}
               </li>
