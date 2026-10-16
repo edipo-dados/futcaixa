@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ClipboardList, Shield, Trophy } from "lucide-react";
+import { ClipboardList, ScrollText, Shield, Trophy } from "lucide-react";
 
 import { getMembershipSession } from "@/lib/auth/membership";
 import { resolvePlatformAdminGuard } from "@/lib/auth/platform-admin";
@@ -58,6 +58,15 @@ export default async function AdminLayout({
                 >
                   <Trophy className="size-4" aria-hidden="true" />
                   Futebóis
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/admin/logs"
+                  className="inline-flex items-center gap-2 rounded-md px-3 py-2 font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  <ScrollText className="size-4" aria-hidden="true" />
+                  Logs de acesso
                 </Link>
               </li>
             </ul>

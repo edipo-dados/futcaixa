@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { captureRequestMeta, recordAccessEvent } from "@/lib/auth/access-log";
 import { createClient } from "@/lib/supabase/server";
 import {
   loginSchema,
@@ -74,17 +75,35 @@ export async function signInWithPassword(
   const { email, password } = parsed.data;
   const supabase = await createClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error) {
+    // Credenciais inválidas NÃO são auditadas (RF3.3): não registramos
+    // tentativas falhas nem credenciais.
     return {
       status: "error",
       intent: "signin",
       message: "E-mail ou senha inválidos.",
     };
+  }
+
+  // Auditoria de LOGIN (ramo de sucesso): ator == alvo (o próprio usuário),
+  // sem clube. O `await` é obrigatório porque o `redirect` abaixo interrompe o
+  // fluxo; `recordAccessEvent` nunca lança, então não quebra o login.
+  const id = data.user?.id;
+  if (id) {
+    const { ip, userAgent } = await captureRequestMeta();
+    await recordAccessEvent({
+      eventType: "login",
+      actorUserId: id,
+      targetUserId: id,
+      clubId: null,
+      ip,
+      userAgent,
+    });
   }
 
   // `redirect` lança internamente para interromper a execução; por isso fica
