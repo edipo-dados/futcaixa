@@ -1,0 +1,27 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Aba 'Meu cadastro' (/meu-cadastro) no grupo (app): o usuário logado troca a própria senha via cliente de SESSÃO (auth.updateUser, nunca service role), validada por changePasswordSchema (FEAT-001). Inclui o link na sidebar e a atualização do teste-espelho de navegação. Depende de FEAT-001 (changePasswordSchema/ChangePasswordState); independente de FEAT-002/004.",
+  "status": "completed",
+  "steps": [
+    "Criar src/app/(app)/meu-cadastro/actions.ts com 'use server' e changeOwnPassword(prevState, formData): parsear { password: formData.get('password'), confirm: formData.get('confirm') } com changePasswordSchema de @/lib/validation/account; se !success, montar fieldErrors (path 'password'|'confirm') e retornar { status: 'error', fieldErrors }; const supabase = await createClient() de @/lib/supabase/server; const { error } = await supabase.auth.updateUser({ password }); em erro retornar { status: 'error', message: 'Não foi possível trocar a senha. Tente novamente.' }; sucesso retornar { status: 'success', message: 'Senha alterada com sucesso.' }. NUNCA usar service role. Não registrar em access_logs.",
+    "Criar src/app/(app)/meu-cadastro/page.tsx (Server Component): título 'Meu cadastro' + descrição curta pt-BR e renderizar <ChangePasswordForm />. Pode ler getMembershipSession() para exibir o nome, mas sem guard de papel (qualquer membership acessa).",
+    "Criar src/app/(app)/meu-cadastro/change-password-form.tsx (Client Component) com useActionState(changeOwnPassword, { status: 'idle' }) e useFormStatus para o pending: campos 'password' (nova senha) e 'confirm' (confirmação), ambos type=password, com aria-* e erros por campo (state.fieldErrors) em pt-BR; mensagem de sucesso/erro geral via role='alert'/status. Mobile-first, usando os componentes de @/components/ui (Input, Label, Button, Card).",
+    "Modificar src/lib/navigation.ts: adicionar { href: '/meu-cadastro', label: 'Meu cadastro', roles: ALL_ROLES } a APP_NAV_ITEMS (posição coerente, ex.: antes de '/sobre').",
+    "Modificar src/lib/navigation.test.ts: adicionar '/meu-cadastro': ['presidente','tesoureiro','jogador'] ao mapa EXPECTED_ROLES_BY_HREF (o teste exige paridade e quebraria sem isso).",
+    "Rodar a verificação e corrigir o que apontar. Ao final setar status desta FEAT para 'completed' e anotar em 'findings' o caminho/rota e nomes exportados relevantes."
+  ],
+  "acceptance_criteria": [
+    "/meu-cadastro troca a própria senha via createClient().auth.updateUser({ password }) (cliente de sessão), validando com changePasswordSchema; senha curta ou confirmação divergente são rejeitadas com mensagem pt-BR; nunca usa service role.",
+    "O link 'Meu cadastro' aparece em APP_NAV_ITEMS para todos os papéis e o teste de navegação foi atualizado em espelho.",
+    "'npx vitest run --project unit src/lib/navigation.test.ts' passa; 'npm run typecheck', 'npm run lint', 'npm run build' passam."
+  ],
+  "verification": [
+    "npx vitest run --project unit src/lib/navigation.test.ts",
+    "npm run typecheck",
+    "npm run lint",
+    "npm run build"
+  ],
+  "blocked_reason": null,
+  "findings": "ENTREGUE (verificações 4/4 verdes: vitest unit navigation.test.ts 6 testes OK; typecheck OK; lint sem warnings/erros; build OK, rota /meu-cadastro listada como dinâmica ƒ).\n\n== ROTA /meu-cadastro (grupo (app)) ==\nsrc/app/(app)/meu-cadastro/actions.ts — 'use server'. export async function changeOwnPassword(_prevState: ChangePasswordState, formData: FormData): Promise<ChangePasswordState>. Parseia { password, confirm } com changePasswordSchema de @/lib/validation/account via safeParse; em !success monta fieldErrors (apenas paths 'password'|'confirm', primeira mensagem por campo) e retorna { status: 'error', fieldErrors }. Usa const supabase = await createClient() de @/lib/supabase/server (cliente de SESSÃO, cookie-bound — NUNCA service role) e supabase.auth.updateUser({ password }). Em erro retorna { status: 'error', message: 'Não foi possível trocar a senha. Tente novamente.' }; sucesso { status: 'success', message: 'Senha alterada com sucesso.' }. NÃO registra em access_logs (troca voluntária não auditada).\n\nsrc/app/(app)/meu-cadastro/page.tsx — Server Component, default export MeuCadastroPage. Sem guard de papel (qualquer membership acessa). Lê getMembershipSession() apenas para saudar com session.fullName (opcional). Renderiza <ChangePasswordForm /> dentro de Card/CardHeader/CardTitle/CardDescription/CardContent de @/components/ui/card. Mobile-first (container max-w-sm).\n\nsrc/app/(app)/meu-cadastro/change-password-form.tsx — 'use client'. export function ChangePasswordForm(). useActionState(changeOwnPassword, { status: 'idle' }) + useFormStatus (SubmitButton interno, label 'Trocar senha'/'Salvando...'). Campos 'password' (Nova senha) e 'confirm' (Confirmar nova senha), ambos type=password, autoComplete='new-password', com aria-invalid/aria-describedby e erros por campo (state.fieldErrors). Sucesso via role='status'; erro geral via role='alert'. Usa Input/Label/Button de @/components/ui.\n\n== NAVEGAÇÃO ==\nsrc/lib/navigation.ts — adicionado { href: '/meu-cadastro', label: 'Meu cadastro', roles: ALL_ROLES } em APP_NAV_ITEMS, logo antes de '/sobre'.\nsrc/lib/navigation.test.ts — espelho atualizado: '/meu-cadastro': ['presidente','tesoureiro','jogador'] em EXPECTED_ROLES_BY_HREF; o teste exato 'jogador vê apenas ...' passou a incluir '/meu-cadastro' entre '/meu-extrato' e '/sobre' (ordem de APP_NAV_ITEMS)."
+}

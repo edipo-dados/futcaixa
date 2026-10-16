@@ -26,6 +26,7 @@ const EXPECTED_ROLES_BY_HREF: Record<string, readonly ClubRole[]> = {
   "/membros/papeis": ["presidente"],
   "/categorias": ["presidente"],
   "/configuracoes": ["presidente"],
+  "/meu-cadastro": ["presidente", "tesoureiro", "jogador"],
   "/sobre": ["presidente", "tesoureiro", "jogador"],
 };
 
@@ -71,10 +72,11 @@ describe("navigation (multi-tenant / ClubRole)", () => {
     }
   });
 
-  it("jogador vê apenas dashboard, meu-extrato e sobre", () => {
+  it("jogador vê apenas dashboard, meu-extrato, meu-cadastro e sobre", () => {
     expect(hrefs(navItemsForRole("jogador"))).toEqual([
       "/dashboard",
       "/meu-extrato",
+      "/meu-cadastro",
       "/sobre",
     ]);
   });

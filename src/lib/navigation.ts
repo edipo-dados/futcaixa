@@ -53,6 +53,7 @@ export const APP_NAV_ITEMS: readonly NavItem[] = [
   { href: "/membros/papeis", label: "Papéis", roles: PRESIDENT_ONLY },
   { href: "/categorias", label: "Categorias", roles: PRESIDENT_ONLY },
   { href: "/configuracoes", label: "Configurações", roles: PRESIDENT_ONLY },
+  { href: "/meu-cadastro", label: "Meu cadastro", roles: ALL_ROLES },
   { href: "/sobre", label: "Sobre e Ajuda", roles: ALL_ROLES },
 ];
 
