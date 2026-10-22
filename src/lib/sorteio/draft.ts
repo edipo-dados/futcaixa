@@ -27,6 +27,13 @@ export interface DraftOptions {
   teams: number;
   /** Rótulos de cor dos times; o tamanho deve ser igual a `teams`. */
   colors: string[];
+  /**
+   * Tamanho máximo por time (opcional). Quando informado, um time que já
+   * atingiu esse limite é pulado nas rodadas seguintes, de modo que os
+   * primeiros times encham até o limite e a sobra fique no último time
+   * (incompleto). Sem este parâmetro, a distribuição é uniforme (como antes).
+   */
+  maxPerTeam?: number;
   /** Seed opcional para resultados reproduzíveis. */
   seed?: number;
 }
@@ -157,7 +164,7 @@ export function drawTeams(
 ): DraftResult {
   validateInputs(players, options);
 
-  const { teams, colors } = options;
+  const { teams, colors, maxPerTeam } = options;
   const random =
     options.seed === undefined ? Math.random : mulberry32(options.seed);
 
@@ -169,6 +176,18 @@ export function drawTeams(
 
   // Acumuladores de cada time.
   const buckets: Player[][] = Array.from({ length: teams }, () => []);
+
+  // Tamanho-alvo de cada time. Sem `maxPerTeam`, não há alvo (distribuição
+  // uniforme como antes). Com `maxPerTeam`, os primeiros times enchem até o
+  // limite e o último recebe a sobra: ex. 15 jogadores, limite 6 => [6, 6, 3].
+  // Como a distribuição é por rodadas (1 por time) respeitando os potes de
+  // nível, pular o time que atingiu o alvo mantém o equilíbrio por nível.
+  const targetSizes: number[] | null =
+    maxPerTeam === undefined
+      ? null
+      : Array.from({ length: teams }, (_, i) =>
+          Math.min(maxPerTeam, Math.max(0, queue.length - i * maxPerTeam)),
+        );
 
   let position = 0;
   let round = 0;
@@ -190,6 +209,14 @@ export function drawTeams(
         // caem em times diferentes porque cada time recebe no máximo 1 por
         // rodada (Req 9.7).
         break;
+      }
+      // Quando há alvo de tamanho, pula times que já o atingiram: assim os
+      // primeiros times enchem e a sobra fica no último (incompleto).
+      if (
+        targetSizes !== null &&
+        buckets[teamIndex].length >= targetSizes[teamIndex]
+      ) {
+        continue;
       }
       buckets[teamIndex].push(queue[position]);
       position += 1;

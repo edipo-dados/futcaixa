@@ -178,6 +178,56 @@ describe("drawTeams — sobras (Req 9.7)", () => {
   });
 });
 
+describe("drawTeams — tamanho máximo por time (maxPerTeam)", () => {
+  it("15 jogadores, 6 por time, 3 times => tamanhos [6, 6, 3]", () => {
+    const players = makePlayers(15);
+    const result = drawTeams(players, {
+      teams: 3,
+      colors: COLORS_3,
+      maxPerTeam: 6,
+      seed: SEED,
+    });
+
+    const tamanhos = result.map((t) => t.players.length).sort((a, b) => b - a);
+    expect(tamanhos).toEqual([6, 6, 3]);
+    // Conserva todos os jogadores.
+    expect(allPlayers(result)).toHaveLength(15);
+  });
+
+  it("12 jogadores, 4 por time, 3 times => tamanhos [4, 4, 4]", () => {
+    const players = makePlayers(12);
+    const result = drawTeams(players, {
+      teams: 3,
+      colors: COLORS_3,
+      maxPerTeam: 4,
+      seed: SEED,
+    });
+
+    const tamanhos = result.map((t) => t.players.length);
+    expect(tamanhos).toEqual([4, 4, 4]);
+  });
+
+  it("mantém o equilíbrio por nível mesmo com maxPerTeam", () => {
+    // 15 jogadores: 5 de nível 1, 5 de nível 2, 5 de nível 3.
+    const players = makePlayers(15);
+    const result = drawTeams(players, {
+      teams: 3,
+      colors: COLORS_3,
+      maxPerTeam: 6,
+      seed: SEED,
+    });
+
+    // Considera apenas os times completos (os dois primeiros, com 6 cada): a
+    // soma de níveis entre eles deve ficar próxima.
+    const completos = result
+      .filter((t) => t.players.length === 6)
+      .map((t) => teamLevelSum(t.players));
+    expect(completos).toHaveLength(2);
+    const diff = Math.max(...completos) - Math.min(...completos);
+    expect(diff).toBeLessThanOrEqual(3);
+  });
+});
+
 describe("drawTeams — determinismo (Req 9.11)", () => {
   it("mesma seed produz exatamente o mesmo resultado", () => {
     const players = makePlayers(11);

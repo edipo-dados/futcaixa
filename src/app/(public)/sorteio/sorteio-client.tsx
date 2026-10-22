@@ -35,7 +35,7 @@ import { buildDraftResultText } from "@/lib/sorteio/result-text";
  * cadastrados fica como melhoria futura (best-effort, apenas quando houver
  * sessão), sem jamais travar o fluxo público.
  *
- * A tarefa 12.2 cobre: montar a lista, configurar nº de times e cores, e
+ * A tarefa 12.2 cobre: montar a lista, configurar quantos jogadores por time, e
  * executar o sorteio exibindo o resultado. A tarefa 12.3 adiciona as ações
  * "sortear de novo" (Req 9.8) e "copiar resultado" em texto para WhatsApp
  * (Req 9.9), além da persistência do estado em localStorage para não perder a
@@ -52,24 +52,18 @@ interface PlayerEntry {
   level: Level;
 }
 
-/**
- * Paleta padrão de cores de time, na ordem sugerida. A UI mostra `teams`
- * entradas e o usuário pode editar cada rótulo de cor (Requisito 9.3).
- */
-const DEFAULT_COLORS = [
-  "Azul",
-  "Vermelho",
-  "Amarelo",
-  "Verde",
-  "Preto",
-  "Branco",
-  "Laranja",
-  "Roxo",
-] as const;
+/** Mínimo de jogadores por time aceito na UI. */
+const MIN_PLAYERS_PER_TEAM = 2;
+/** Valor inicial de jogadores por time. */
+const DEFAULT_PLAYERS_PER_TEAM = 6;
 
-/** Limites de número de times oferecidos na UI. */
-const MIN_TEAMS = 2;
-const MAX_TEAMS = 8;
+/**
+ * Gera os rótulos dos times automaticamente: ["Time 1", "Time 2", ...]. São
+ * passados ao algoritmo como o array `colors` (agora meros identificadores).
+ */
+function makeTeamLabels(nTeams: number): string[] {
+  return Array.from({ length: nTeams }, (_, i) => `Time ${i + 1}`);
+}
 
 /** Rótulo amigável para cada nível. */
 const LEVEL_LABELS: Record<Level, string> = {
@@ -88,13 +82,12 @@ const STORAGE_KEY = "futcaixa:sorteio";
 
 /**
  * Formato do estado persistido em localStorage. Guardamos apenas dados simples
- * e serializáveis (lista de jogadores, nº de times, cores e, por conveniência,
+ * e serializáveis (lista de jogadores, jogadores por time e, por conveniência,
  * o último resultado) para reconstruir a tela ao recarregar.
  */
 interface PersistedState {
   players: PlayerEntry[];
-  teamCount: number;
-  colors: string[];
+  playersPerTeam: number;
   result: DraftResult | null;
 }
 
@@ -134,21 +127,17 @@ function loadPersistedState(): PersistedState | null {
           .filter((p) => p.name.trim() !== "")
       : [];
 
-    const teamCount =
-      typeof data.teamCount === "number" && Number.isInteger(data.teamCount)
-        ? Math.min(MAX_TEAMS, Math.max(MIN_TEAMS, data.teamCount))
-        : 2;
-
-    const colors: string[] = Array.isArray(data.colors)
-      ? data.colors.filter((c): c is string => typeof c === "string")
-      : [];
+    const playersPerTeam =
+      typeof data.playersPerTeam === "number" &&
+      Number.isInteger(data.playersPerTeam)
+        ? Math.max(MIN_PLAYERS_PER_TEAM, data.playersPerTeam)
+        : DEFAULT_PLAYERS_PER_TEAM;
 
     const result = isDraftResult(data.result) ? data.result : null;
 
     return {
       players,
-      teamCount,
-      colors: colors.length === teamCount ? colors : [],
+      playersPerTeam,
       result,
     };
   } catch {
@@ -195,9 +184,8 @@ export function SorteioClient() {
   const [newName, setNewName] = React.useState("");
   const [newLevel, setNewLevel] = React.useState<Level>(2);
 
-  const [teamCount, setTeamCount] = React.useState(2);
-  const [colors, setColors] = React.useState<string[]>(() =>
-    DEFAULT_COLORS.slice(0, 2),
+  const [playersPerTeam, setPlayersPerTeam] = React.useState(
+    DEFAULT_PLAYERS_PER_TEAM,
   );
 
   const [result, setResult] = React.useState<DraftResult | null>(null);
@@ -219,10 +207,7 @@ export function SorteioClient() {
     const saved = loadPersistedState();
     if (saved) {
       setPlayers(saved.players);
-      setTeamCount(saved.teamCount);
-      if (saved.colors.length === saved.teamCount) {
-        setColors(saved.colors);
-      }
+      setPlayersPerTeam(saved.playersPerTeam);
       setResult(saved.result);
     }
     setHydrated(true);
@@ -235,44 +220,21 @@ export function SorteioClient() {
     try {
       const toPersist: PersistedState = {
         players,
-        teamCount,
-        colors,
+        playersPerTeam,
         result,
       };
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(toPersist));
     } catch {
       // Storage indisponível (modo privado/cota): persistência é best-effort.
     }
-  }, [hydrated, players, teamCount, colors, result]);
+  }, [hydrated, players, playersPerTeam, result]);
 
-  /**
-   * Ajusta a lista de cores quando o número de times muda, preservando as cores
-   * já escolhidas e completando com a paleta padrão quando necessário.
-   */
-  function handleTeamCountChange(next: number) {
-    const clamped = Math.min(MAX_TEAMS, Math.max(MIN_TEAMS, next));
-    setTeamCount(clamped);
-    setColors((prev) => {
-      const nextColors = prev.slice(0, clamped);
-      for (let i = nextColors.length; i < clamped; i++) {
-        // Completa com a próxima cor padrão ainda não usada; cai para um rótulo
-        // genérico se a paleta acabar.
-        const fallback =
-          DEFAULT_COLORS.find((c) => !nextColors.includes(c)) ??
-          `Time ${i + 1}`;
-        nextColors.push(fallback);
-      }
-      return nextColors;
-    });
-    setResult(null);
-  }
-
-  function handleColorChange(index: number, value: string) {
-    setColors((prev) => {
-      const next = prev.slice();
-      next[index] = value;
-      return next;
-    });
+  /** Atualiza quantos jogadores por time, respeitando o mínimo. */
+  function handlePlayersPerTeamChange(next: number) {
+    const clamped = Number.isFinite(next)
+      ? Math.max(MIN_PLAYERS_PER_TEAM, Math.trunc(next))
+      : MIN_PLAYERS_PER_TEAM;
+    setPlayersPerTeam(clamped);
     setResult(null);
   }
 
@@ -317,24 +279,19 @@ export function SorteioClient() {
     setError(null);
     setCopied(false);
 
-    const trimmedColors = colors.map((c) => c.trim());
-    const uniqueColors = new Set(trimmedColors);
-
-    // Validações amigáveis antes de chamar o algoritmo (que também valida).
-    if (players.length < teamCount) {
+    // Com total <= jogadores por time dá no máximo 1 time, o que não faz
+    // sentido sortear: pede ao menos playersPerTeam + 1 jogadores.
+    if (players.length <= playersPerTeam) {
       setError(
-        `Adicione ao menos ${teamCount} jogadores para formar ${teamCount} times. Você tem ${players.length}.`,
+        `Adicione ao menos ${playersPerTeam + 1} jogadores para formar mais de um time (${playersPerTeam} por time). Você tem ${players.length}.`,
       );
       return;
     }
-    if (trimmedColors.some((c) => c === "")) {
-      setError("Todas as cores de time precisam de um nome.");
-      return;
-    }
-    if (uniqueColors.size !== trimmedColors.length) {
-      setError("As cores dos times devem ser distintas.");
-      return;
-    }
+
+    // Número de times: arredonda para cima. Ex.: 15 jogadores, 6 por time =>
+    // ceil(15/6) = 3 times (6, 6 e 3). Os rótulos "Time N" são gerados aqui.
+    const nTeams = Math.ceil(players.length / playersPerTeam);
+    const labels = makeTeamLabels(nTeams);
 
     const draftPlayers: Player[] = players.map((p) => ({
       name: p.name,
@@ -343,8 +300,9 @@ export function SorteioClient() {
 
     try {
       const draft = drawTeams(draftPlayers, {
-        teams: teamCount,
-        colors: trimmedColors,
+        teams: nTeams,
+        colors: labels,
+        maxPerTeam: playersPerTeam,
       });
       setResult(draft);
     } catch (err) {
@@ -384,15 +342,6 @@ export function SorteioClient() {
       );
     }
   }
-
-  const teamOptions = React.useMemo(
-    () =>
-      Array.from(
-        { length: MAX_TEAMS - MIN_TEAMS + 1 },
-        (_, i) => MIN_TEAMS + i,
-      ),
-    [],
-  );
 
   return (
     <div className="space-y-6">
@@ -445,8 +394,8 @@ export function SorteioClient() {
 
           {players.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Nenhum jogador na lista ainda. Adicione pelo menos {teamCount}{" "}
-              para sortear.
+              Nenhum jogador na lista ainda. Adicione pelo menos{" "}
+              {playersPerTeam + 1} para sortear.
             </p>
           ) : (
             <ul className="divide-y rounded-md border">
@@ -501,57 +450,38 @@ export function SorteioClient() {
         </CardContent>
       </Card>
 
-      {/* Configuração de times e cores (Requisito 9.3) */}
+      {/* Configuração: quantos jogadores por time (Requisito 9.3) */}
       <Card>
         <CardHeader>
           <CardTitle>Configuração</CardTitle>
           <CardDescription>
-            Escolha quantos times e as cores de cada um.
+            Escolha quantos jogadores por time. O número de times é calculado
+            automaticamente: os primeiros ficam completos e o último recebe a
+            sobra.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1.5 sm:max-w-xs">
-            <Label htmlFor="team-count">Número de times</Label>
-            <Select
-              id="team-count"
-              value={teamCount}
-              onChange={(e) => handleTeamCountChange(Number(e.target.value))}
+            <Label htmlFor="players-per-team">Jogadores por time</Label>
+            <Input
+              id="players-per-team"
+              type="number"
+              inputMode="numeric"
+              min={MIN_PLAYERS_PER_TEAM}
+              step={1}
+              value={playersPerTeam}
+              onChange={(e) =>
+                handlePlayersPerTeamChange(Number(e.target.value))
+              }
+              aria-describedby="players-per-team-hint"
+            />
+            <p
+              id="players-per-team-hint"
+              className="text-xs text-muted-foreground"
             >
-              {teamOptions.map((count) => (
-                <option key={count} value={count}>
-                  {count} times
-                </option>
-              ))}
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label>Cores dos times</Label>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-              {colors.map((color, index) => (
-                <div key={index} className="space-y-1.5">
-                  <Label
-                    htmlFor={`team-color-${index}`}
-                    className="text-xs text-muted-foreground"
-                  >
-                    Time {index + 1}
-                  </Label>
-                  <Input
-                    id={`team-color-${index}`}
-                    value={color}
-                    onChange={(e) => handleColorChange(index, e.target.value)}
-                    placeholder={`Cor do time ${index + 1}`}
-                    list="cores-sugeridas"
-                    autoComplete="off"
-                  />
-                </div>
-              ))}
-            </div>
-            <datalist id="cores-sugeridas">
-              {DEFAULT_COLORS.map((c) => (
-                <option key={c} value={c} />
-              ))}
-            </datalist>
+              Ex.: 6 jogadores por time. Com 15 jogadores, saem 2 times de 6 e 1
+              time de 3.
+            </p>
           </div>
         </CardContent>
       </Card>

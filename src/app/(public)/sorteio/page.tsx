@@ -13,7 +13,7 @@ import { SorteioClient } from "./sorteio-client";
 export const metadata: Metadata = {
   title: "Sorteio de times | FutCaixa",
   description:
-    "Monte a lista de jogadores com níveis, escolha o número de times e as cores, e sorteie times equilibrados. Sem login.",
+    "Monte a lista de jogadores com níveis, escolha quantos jogadores por time, e sorteie times equilibrados. Sem login.",
 };
 
 export default function SorteioPage() {
@@ -23,7 +23,7 @@ export default function SorteioPage() {
         <h1 className="text-2xl font-bold tracking-tight">Sorteio de times</h1>
         <p className="text-muted-foreground">
           Monte a lista de jogadores com o nível de cada um, defina quantos
-          times e as cores, e clique em sortear. Os times saem equilibrados
+          jogadores por time, e clique em sortear. Os times saem equilibrados
           pelos níveis. Não precisa de login.
         </p>
       </header>
