@@ -6,8 +6,9 @@ import { generateMensalidadesForPeriod } from "@/lib/cron/gerar-mensalidades";
 import { createServiceRoleClient } from "@/lib/supabase/server";
 
 /**
- * Route Handler (Vercel Cron) para gerar as mensalidades dos mensalistas
- * ativos não isentos (Req 5.1).
+ * Route Handler para gerar as mensalidades dos mensalistas
+ * ativos não isentos (Req 5.1). Disparado por um agendador externo (ver
+ * docs/crons.md), que faz um GET com o header do CRON_SECRET.
  *
  * Fluxo (design.md "Crons — decisão"):
  *  1. Valida o `CRON_SECRET` (401 se ausente/incorreto; 500 se não configurado).
@@ -16,7 +17,7 @@ import { createServiceRoleClient } from "@/lib/supabase/server";
  *  4. Gera as cobranças de forma idempotente (Req 5.2) — o índice único parcial
  *     do banco evita duplicar; a função trata a violação (23505) graciosamente.
  *
- * Agendamento configurado em `vercel.json` (Req 13.4).
+ * Agendamento configurado no agendador externo (Req 13.4). Ver docs/crons.md.
  */
 
 // Precisa do runtime Node (service-role, server-only) e nunca deve ser cacheado.
@@ -24,7 +25,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function handle(request: Request) {
-  // 1) Autorização por segredo compartilhado com a Vercel Cron.
+  // 1) Autorização por segredo compartilhado com o agendador externo.
   let authorized: boolean;
   try {
     authorized = validateCronSecret(request);
@@ -48,7 +49,13 @@ async function handle(request: Request) {
     const period = currentPeriod();
     const summary = await generateMensalidadesForPeriod(supabase, period);
 
-    return NextResponse.json({ ok: true, ...summary });
+    // Resposta mínima e de tamanho fixo. Alguns agendadores externos (ex.:
+    // cron-job.org) abortam com "output too large" quando a resposta passa de
+    // um limite baixo; por isso devolvemos só `{ ok: true }` e registramos os
+    // contadores detalhados nos logs do servidor (visíveis no Render).
+    console.log("[cron:gerar-mensalidades]", JSON.stringify(summary));
+
+    return NextResponse.json({ ok: true });
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Falha ao gerar mensalidades.";
@@ -56,7 +63,7 @@ async function handle(request: Request) {
   }
 }
 
-// A Vercel Cron dispara via GET; expomos POST também para acionamento manual.
+// O agendador dispara via GET; expomos POST também para acionamento manual.
 export async function GET(request: Request) {
   return handle(request);
 }

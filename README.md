@@ -29,7 +29,7 @@ Principais recursos:
 | Validação | Zod |
 | Testes | Vitest |
 | Migrations | Supabase CLI (SQL versionado no repositório) |
-| Hospedagem | Vercel (inclui Vercel Cron) |
+| Hospedagem | Render (Web Service) + agendador externo para crons |
 
 ---
 
@@ -110,8 +110,8 @@ A área autenticada usa uma **sidebar lateral** (drawer colapsável no mobile, f
    | `NEXT_PUBLIC_SUPABASE_URL` | sim | URL do projeto Supabase, ex.: `https://xxxxxxxx.supabase.co`. |
    | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | sim | Chave anônima do Supabase. Usada no cliente e no servidor com a sessão do usuário; **respeita a RLS**. |
    | `SUPABASE_SERVICE_ROLE_KEY` | **não — segredo** | Chave service role que **contorna a RLS**. Usada apenas no servidor (rotas de cron e operações administrativas). Como contorna a RLS, o código precisa filtrar explicitamente por `club_id` em cada iteração. Nunca exponha ao cliente nem faça commit dela. |
-   | `CRON_SECRET` | não | Segredo que protege os Route Handlers de cron (`gerar-mensalidades`, `gerar-recorrentes`). A Vercel Cron o envia no header `Authorization: Bearer <CRON_SECRET>`. Gere um valor aleatório forte. |
-   | `NEXT_PUBLIC_APP_URL` | sim (opcional) | URL pública do app (ex.: `https://futcaixa.vercel.app`). Usada apenas para montar o link do sistema nas mensagens de cobrança (inadimplentes). Pode ficar em branco. |
+   | `CRON_SECRET` | não | Segredo que protege os Route Handlers de cron (`gerar-mensalidades`, `gerar-recorrentes`). O agendador externo que dispara as rotas envia o header `Authorization: Bearer <CRON_SECRET>`. Gere um valor aleatório forte. |
+   | `NEXT_PUBLIC_APP_URL` | sim (opcional) | URL pública do app (ex.: `https://futcaixa.onrender.com`). Usada apenas para montar o link do sistema nas mensagens de cobrança (inadimplentes). Pode ficar em branco. |
 
    > `.env.local` nunca deve ser versionado. Mantenha os segredos fora do Git.
 
@@ -226,34 +226,38 @@ Depois disso, novos usuários entram sozinhos (cadastro aberto) e ganham acesso 
 
 ---
 
-## Crons (Vercel Cron)
+## Crons (agendador externo)
 
-O arquivo [`vercel.json`](vercel.json) agenda dois Route Handlers que agora **iteram por clube** — percorrem todos os futebóis ativos e, para cada um, leem a `settings` daquele clube (dia de geração, valores padrão) e geram cobranças/lançamentos escopados ao respectivo `club_id`:
+Dois Route Handlers HTTP agora **iteram por clube** — percorrem todos os futebóis ativos e, para cada um, leem a `settings` daquele clube (dia de geração, valores padrão) e geram cobranças/lançamentos escopados ao respectivo `club_id`:
 
 - `/api/cron/gerar-mensalidades` — para **cada clube**, gera as cobranças de mensalidade dos mensalistas ativos e não isentos do clube (idempotente).
 - `/api/cron/gerar-recorrentes` — para **cada clube**, gera as despesas recorrentes do período (idempotente).
 
-Ambos rodam diariamente às `06:00 (UTC)` (`0 6 * * *`) e são protegidos pelo **`CRON_SECRET`**: a Vercel Cron envia o header `Authorization: Bearer <CRON_SECRET>` em cada disparo, e o handler recusa (`401`) qualquer chamada sem o segredo correto. A geração usa a service role **apenas no servidor** e, como ela **contorna a RLS**, cada iteração filtra explicitamente por `club_id` para não cruzar dados entre futebóis; uma falha em um clube não aborta os demais.
+No **plano Free do Render não há Cron Jobs gratuitos** (só web services têm free tier), então os dois endpoints são disparados por um **agendador externo gratuito** (cron-job.org, Upstash QStash, EasyCron) fazendo um `GET` 1x/dia. Eles são protegidos pelo **`CRON_SECRET`**: você configura o header `Authorization: Bearer <CRON_SECRET>` no agendador, e o handler recusa (`401`) qualquer chamada sem o segredo correto. A geração usa a service role **apenas no servidor** e, como ela **contorna a RLS**, cada iteração filtra explicitamente por `club_id` para não cruzar dados entre futebóis; uma falha em um clube não aborta os demais.
 
-> Detalhes de agendamento, idempotência (por clube), proteção pelo segredo, como testar com `curl` e como configurar na Vercel: veja [`docs/crons.md`](docs/crons.md). A configuração das variáveis de ambiente também é tratada na seção de deploy abaixo.
+> Detalhes de agendamento, idempotência (por clube), proteção pelo segredo, como testar com `curl` e como configurar o agendador externo: veja [`docs/crons.md`](docs/crons.md). A configuração das variáveis de ambiente também é tratada na seção de deploy abaixo.
 
 ---
 
-## Deploy na Vercel
+## Deploy no Render
 
-1. **Conecte o repositório** no painel da [Vercel](https://vercel.com) (Import Project). A Vercel detecta o Next.js automaticamente — o build command é `next build` e nenhuma configuração extra de framework é necessária.
+O app roda no Render como **um único Web Service** Node (front + back juntos), declarado em [`render.yaml`](render.yaml). O banco segue no Supabase.
 
-2. **Configure as variáveis de ambiente** no painel da Vercel (Project → Settings → Environment Variables), com os mesmos nomes do `.env.local`:
+1. **Conecte o repositório** no Render via **New → Blueprint**. O Render lê o `render.yaml` e propõe criar o Web Service `futcaixa` (build `npm ci && npm run build`, start `npm run start`).
 
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` (segredo — defina só na Vercel, nunca no cliente)
+2. **Configure as variáveis de ambiente** no painel do Render, com os mesmos nomes do `.env.local`:
+
+   - `NEXT_PUBLIC_SUPABASE_URL` *(necessária já no BUILD — é inlined pelo Next)*
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` *(necessária já no BUILD)*
+   - `SUPABASE_SERVICE_ROLE_KEY` (segredo — defina só no Render, nunca no cliente)
    - `CRON_SECRET` (segredo usado pelos crons)
    - `NEXT_PUBLIC_APP_URL` (opcional — a URL pública do deploy)
 
-3. **Deploy.** No deploy, os crons declarados em `vercel.json` são **ativados automaticamente** pela Vercel, passando a chamar os endpoints `/api/cron/*` nos horários agendados com o header do `CRON_SECRET`.
+3. **Deploy.** O serviço recebe uma URL pública `https://<nome>.onrender.com`. Os crons **não** são ativados automaticamente: no plano Free você os agenda com um **agendador externo** (ver [Crons](#crons-agendador-externo) e [`docs/crons.md`](docs/crons.md)).
 
 4. Garanta que o banco do projeto Supabase de produção já teve as migrations aplicadas (`supabase db push`) antes de liberar o acesso. Lembre que o ambiente sobe **sem clubes**: defina um `system_admin` e crie o primeiro futebol conforme [Primeiro acesso](#primeiro-acesso-cadastro-presidente-e-futebol).
+
+> Passo a passo completo (Blueprint, variáveis inlined no build, sleep do Free, Node 22): [`docs/deploy-render.md`](docs/deploy-render.md).
 
 ---
 

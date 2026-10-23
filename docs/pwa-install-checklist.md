@@ -12,7 +12,7 @@
 - **HTTPS obrigatório.** O service worker só é registrado em contexto seguro
   (`https://`) — a única exceção é `http://localhost`. Em celular, o acesso via IP da
   rede local (`http://192.168.x.x`) **não** registra o SW: use um domínio HTTPS
-  (deploy na Vercel) ou um túnel (ex.: `ngrok`, `cloudflared`).
+  (deploy no Render) ou um túnel (ex.: `ngrok`, `cloudflared`).
 - Gerar e servir um **build de produção** (o SW só é registrado em produção):
 
   ```bash
@@ -20,7 +20,7 @@
   npm run start        # serve em http://localhost:3000
   ```
 
-  Para testar no celular pela rede local com HTTPS, prefira o deploy de preview da Vercel
+  Para testar no celular pela rede local com HTTPS, prefira o deploy no Render
   ou um túnel apontando para a porta 3000.
 - Confirmar que estes arquivos respondem na raiz do site:
   `/manifest.webmanifest`, `/sw.js`, `/offline.html`, `/icon.svg`, `/icon-192.png`,
