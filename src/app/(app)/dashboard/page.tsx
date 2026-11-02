@@ -4,10 +4,11 @@ import { BalanceChart } from "@/components/charts/BalanceChart";
 import { CategoryBreakdownChart } from "@/components/charts/CategoryBreakdownChart";
 import { IncomeExpenseChart } from "@/components/charts/IncomeExpenseChart";
 import { GoalsSection } from "@/components/GoalsSection";
+import { PlayerFlowSection } from "@/components/PlayerFlowSection";
 import { RecentExpensesSection } from "@/components/RecentExpensesSection";
 import { RecentIncomesSection } from "@/components/RecentIncomesSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getMembershipSession } from "@/lib/auth/membership";
+import { getMembershipSession, hasClubRole } from "@/lib/auth/membership";
 import { currentPeriod, isValidPeriod } from "@/lib/date";
 import { fromCents } from "@/lib/money";
 
@@ -25,6 +26,7 @@ import {
   getIncomeExpenseSeries,
   getMonthSummary,
   getPlayerCounts,
+  getPlayerFlow,
   getRecentExpenses,
   getRecentIncomes,
   getRunwayMonths,
@@ -33,7 +35,9 @@ import {
 /**
  * Dashboard (Server Component) — acessível a QUALQUER membro ativo do futebol
  * (presidente, tesoureiro ou jogador), sem restrição por papel além de exigir
- * membership ativa.
+ * membership ativa. EXCEÇÃO: o card "Entradas e saídas de jogadores" (com
+ * nomes) é exclusivo de presidente/tesoureiro — o papel é verificado aqui no
+ * servidor e, para `jogador`, os dados nem são buscados.
  *
  * MULTI-TENANT (tarefa 21.8): resolve a sessão multi-tenant e opera sempre
  * sobre o futebol ATIVO. Sem clube ativo (estado "sem futebol") redireciona ao
@@ -103,6 +107,9 @@ export default async function DashboardPage({
       : nowPeriod;
   const year = Number(period.slice(0, 4));
 
+  // Entradas/saídas de jogadores expõem nomes: só presidente/tesoureiro.
+  const canSeePlayerFlow = hasClubRole(session, "presidente", "tesoureiro");
+
   const [
     balanceCents,
     summary,
@@ -118,6 +125,7 @@ export default async function DashboardPage({
     goals,
     recentExpenses,
     recentIncomes,
+    playerFlow,
   ] = await Promise.all([
     getCurrentBalanceCents(clubId, period),
     getMonthSummary(clubId, period),
@@ -133,6 +141,9 @@ export default async function DashboardPage({
     getActiveGoals(clubId),
     getRecentExpenses(clubId, 10),
     getRecentIncomes(clubId, 10),
+    canSeePlayerFlow
+      ? getPlayerFlow(clubId, period, nowPeriod)
+      : Promise.resolve(null),
   ]);
 
   const resultCents = summary.incomeCents - summary.expenseCents;
@@ -242,6 +253,9 @@ export default async function DashboardPage({
           </CardContent>
         </Card>
       </section>
+
+      {/* Entradas e saídas de jogadores — só presidente/tesoureiro. */}
+      {canSeePlayerFlow && <PlayerFlowSection flow={playerFlow} />}
 
       {/* Metas e vaquinhas (Req 8.6) — só aparece quando há metas ativas. */}
       <GoalsSection goals={goals} />

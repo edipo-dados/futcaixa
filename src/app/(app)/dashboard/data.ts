@@ -1,5 +1,10 @@
 import "server-only";
 
+import {
+  buildPlayerFlow,
+  type PlayerFlow,
+  type PlayerFlowInput,
+} from "@/lib/dashboard/player-flow";
 import { currentPeriod, shiftPeriod } from "@/lib/date";
 import { computeRunwayMonths } from "@/lib/runway";
 import { createClient } from "@/lib/supabase/server";
@@ -596,6 +601,77 @@ export async function getPlayerCounts(clubId: string): Promise<PlayerCounts> {
     ativos: ativosRes.count ?? 0,
     mensalistas: mensalistasRes.count ?? 0,
   };
+}
+
+/* ===================================================================== *
+ * Entradas e saídas de jogadores (presidente/tesoureiro)                *
+ *                                                                       *
+ * Diferente dos agregados, lê a tabela `players` direto (expõe nomes),  *
+ * por isso SÓ deve ser chamado para presidente/tesoureiro — a página     *
+ * decide no servidor e não chama o loader para `jogador`. A RLS          *
+ * `players_select` (membro do clube) permite ler inativos e excluídos.  *
+ * ===================================================================== */
+
+interface PlayerFlowRow {
+  id: string;
+  name: string;
+  nickname: string | null;
+  status: "ativo" | "inativo";
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  // Colunas da migration 039; ausentes no SELECT legado.
+  inactivated_at?: string | null;
+  inactivated_at_approx?: boolean | null;
+}
+
+const PLAYER_FLOW_COLUMNS =
+  "id, name, nickname, status, created_at, updated_at, deleted_at, inactivated_at, inactivated_at_approx";
+const PLAYER_FLOW_LEGACY_COLUMNS =
+  "id, name, nickname, status, created_at, updated_at, deleted_at";
+
+/**
+ * Entradas/saídas de jogadores do futebol ATIVO (todos: mensalistas e
+ * avulsos, inclusive inativos e excluídos), agregadas por `buildPlayerFlow`.
+ *
+ * Fallback de runtime: se o SELECT com as colunas novas falhar (deploy antes
+ * da migration 039), repete uma vez com o SELECT legado — inativos passam a
+ * usar `updated_at` como data aproximada. Se também falhar, devolve `null` e
+ * o card mostra a mensagem de erro, sem quebrar o dashboard.
+ */
+export async function getPlayerFlow(
+  clubId: string,
+  selectedPeriod: string,
+  nowPeriod: string = currentPeriod(),
+): Promise<PlayerFlow | null> {
+  const supabase = await createClient();
+
+  const load = (columns: string) =>
+    supabase
+      .from("players")
+      .select(columns)
+      .eq("club_id", clubId)
+      .returns<PlayerFlowRow[]>();
+
+  let { data, error } = await load(PLAYER_FLOW_COLUMNS);
+  if (error) {
+    ({ data, error } = await load(PLAYER_FLOW_LEGACY_COLUMNS));
+  }
+  if (error || !data) return null;
+
+  const inputs: PlayerFlowInput[] = data.map((row) => ({
+    id: row.id,
+    name: row.name,
+    nickname: row.nickname,
+    status: row.status,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    deletedAt: row.deleted_at,
+    inactivatedAt: row.inactivated_at,
+    inactivatedAtApprox: row.inactivated_at_approx,
+  }));
+
+  return buildPlayerFlow(inputs, { selectedPeriod, currentPeriod: nowPeriod });
 }
 
 /* ===================================================================== *
