@@ -5,16 +5,11 @@
  * Supabase e esperam as variáveis `SUPABASE_TEST_URL`,
  * `SUPABASE_TEST_SERVICE_ROLE_KEY` e `SUPABASE_TEST_ANON_KEY`.
  *
- * Em desenvolvimento local, o projeto Supabase já está configurado no
- * `.env.local` (na raiz do repositório) com os nomes de produção
- * (`NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
- * `NEXT_PUBLIC_SUPABASE_ANON_KEY`). Para não exigir que o desenvolvedor
- * duplique as variáveis manualmente, este setup LÊ o `.env.local` em runtime
- * de teste e, QUANDO as `SUPABASE_TEST_*` NÃO estiverem definidas, mapeia:
- *
- *   NEXT_PUBLIC_SUPABASE_URL        → SUPABASE_TEST_URL
- *   SUPABASE_SERVICE_ROLE_KEY       → SUPABASE_TEST_SERVICE_ROLE_KEY
- *   NEXT_PUBLIC_SUPABASE_ANON_KEY   → SUPABASE_TEST_ANON_KEY
+ * Este setup LÊ o `.env.local` em runtime de teste e preenche APENAS as
+ * `SUPABASE_TEST_*` definidas explicitamente nele (um projeto Supabase
+ * dedicado a testes). As credenciais de produção NUNCA são usadas como
+ * fallback, e um banco de teste com a mesma URL de produção é recusado —
+ * nesses casos as suítes de integração ficam em skip.
  *
  * Importante:
  *   - NENHUM segredo é commitado: os valores são lidos do `.env.local` apenas
@@ -71,21 +66,22 @@ function parseEnvFile(content: string): Record<string, string> {
 }
 
 /**
- * Mapa de origem (nomes de produção no `.env.local`) → destino (nomes esperados
- * pelos testes). Só é aplicado quando o destino ainda não está definido.
+ * SEGURANÇA: os testes de integração CRIAM e APAGAM dados reais (usuários de
+ * auth, clubes, cobranças) e o cron itera TODOS os clubes do banco. Por isso
+ * NUNCA reaproveitamos as credenciais de produção (`NEXT_PUBLIC_SUPABASE_URL`,
+ * `SUPABASE_SERVICE_ROLE_KEY`, ...) como fallback: rodar `npm run test` com o
+ * `.env.local` de produção já poluiu o banco real com cobranças de teste.
  *
- * A URL é mapeada diretamente. As CHAVES recebem tratamento adicional
- * (classifyKeys) porque os testes exigem a chave SECRETA (service role, que
- * contorna a RLS e habilita a Admin API) corretamente separada da chave
- * publicável (anon/publishable, que respeita a RLS).
+ * Só lemos do `.env.local` as variáveis `SUPABASE_TEST_*` definidas
+ * EXPLICITAMENTE (apontando para um projeto Supabase dedicado a testes). Sem
+ * elas, as suítes de integração são ignoradas (skip).
  */
-const URL_MAPPING: ReadonlyArray<readonly [source: string, target: string]> = [
-  ["NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_TEST_URL"],
-];
+const TEST_URL_KEY = "SUPABASE_TEST_URL";
+const SERVICE_ROLE_SOURCE = "SUPABASE_TEST_SERVICE_ROLE_KEY";
+const ANON_SOURCE = "SUPABASE_TEST_ANON_KEY";
 
-/** Nomes de origem das chaves no `.env.local` (ordem de nomeação esperada). */
-const SERVICE_ROLE_SOURCE = "SUPABASE_SERVICE_ROLE_KEY";
-const ANON_SOURCE = "NEXT_PUBLIC_SUPABASE_ANON_KEY";
+/** URL de produção (usada só para recusar um banco de teste igual a ela). */
+const PROD_URL_KEY = "NEXT_PUBLIC_SUPABASE_URL";
 
 /**
  * Decide qual string é a chave SECRETA (service role) e qual é a PUBLICÁVEL
@@ -163,9 +159,7 @@ function loadTestEnvFromDotEnvLocal(): void {
     if (value && value.length > 0) process.env[target] = value;
   };
 
-  for (const [source, target] of URL_MAPPING) {
-    setIfAbsent(target, parsed[source]);
-  }
+  setIfAbsent(TEST_URL_KEY, parsed[TEST_URL_KEY]);
 
   const { serviceRole, anon } = classifyKeys({
     serviceRole: parsed[SERVICE_ROLE_SOURCE],
@@ -175,4 +169,32 @@ function loadTestEnvFromDotEnvLocal(): void {
   setIfAbsent("SUPABASE_TEST_ANON_KEY", anon);
 }
 
+/**
+ * Trava final: se o banco de teste apontar para a MESMA URL de produção,
+ * desligamos as variáveis de teste (as suítes viram skip) e avisamos.
+ */
+function refuseProductionDatabase(): void {
+  const envPath = resolve(process.cwd(), ".env.local");
+  let prodUrl = process.env[PROD_URL_KEY];
+  if (!prodUrl && existsSync(envPath)) {
+    try {
+      prodUrl = parseEnvFile(readFileSync(envPath, "utf8"))[PROD_URL_KEY];
+    } catch {
+      /* sem .env.local legível: nada a comparar */
+    }
+  }
+
+  const testUrl = process.env[TEST_URL_KEY];
+  const normalize = (u: string) => u.trim().replace(/\/+$/, "").toLowerCase();
+  if (testUrl && prodUrl && normalize(testUrl) === normalize(prodUrl)) {
+    delete process.env.SUPABASE_TEST_URL;
+    delete process.env.SUPABASE_TEST_SERVICE_ROLE_KEY;
+    delete process.env.SUPABASE_TEST_ANON_KEY;
+    console.warn(
+      "[integration] SUPABASE_TEST_URL é igual à URL de produção — testes de integração DESATIVADOS para não alterar dados reais.",
+    );
+  }
+}
+
 loadTestEnvFromDotEnvLocal();
+refuseProductionDatabase();
